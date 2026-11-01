@@ -1,0 +1,12 @@
+/* TEAM */
+Name: Jose Lopez
+Role: Head of AI at bunny.net
+Site: https://joselopez.pro/
+Writing: https://disruptedai.substack.com/
+
+/* TECHNOLOGY */
+Stack: HTML, CSS (no framework)
+Hosting: Static hosting (DonDominio)
+
+/* THANKS */
+Thanks to clients, partners, and the agents that read this.
