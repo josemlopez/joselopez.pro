@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jose Lopez · Head of AI · Secure AI systems at scale</title>
+  <meta name="description" content="Jose Lopez is Head of AI at bunny.net. He builds secure AI systems at scale and advises CEOs, CTOs and boards on AI strategy and technical due diligence.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://joselopez.pro/">
+
+  <meta property="og:type" content="profile">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:site_name" content="Jose Lopez">
+  <meta property="og:title" content="Jose Lopez · Head of AI · Secure AI systems at scale">
+  <meta property="og:description" content="Head of AI at bunny.net, building secure AI systems at scale and advising executive teams on AI strategy and technical due diligence.">
+  <meta property="og:url" content="https://joselopez.pro/">
+  <meta property="og:image" content="https://joselopez.pro/_og-v8.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Jose Lopez, Head of AI">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Jose Lopez · Head of AI · Secure AI systems at scale">
+  <meta name="twitter:description" content="Secure AI systems at scale, executive AI strategy and technical due diligence.">
+  <meta name="twitter:image" content="https://joselopez.pro/_og-v8.jpg">
+  <meta name="twitter:image:alt" content="Jose Lopez, Head of AI">
+
+  <meta name="theme-color" content="#fcfcfa" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#181817" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ProfilePage",
+        "@id": "https://joselopez.pro/#profile",
+        "url": "https://joselopez.pro/",
+        "name": "Jose Lopez · Head of AI · Secure AI systems at scale",
+        "mainEntity": { "@id": "https://joselopez.pro/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://joselopez.pro/#person",
+        "name": "Jose Lopez",
+        "url": "https://joselopez.pro/",
+        "image": "https://joselopez.pro/_og-v8.jpg",
+        "jobTitle": "Head of AI",
+        "description": "Head of AI focused on secure AI systems at scale, AI strategy and technical due diligence.",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "bunny.net",
+          "url": "https://bunny.net/"
+        },
+        "sameAs": [
+          "https://github.com/josemlopez",
+          "https://www.linkedin.com/in/jmlop/",
+          "https://disruptedai.substack.com/"
+        ],
+        "knowsAbout": [
+          "Artificial intelligence",
+          "AI security",
+          "AI agents",
+          "LLM gateways",
+          "Prompt injection",
+          "Threat modeling",
+          "Machine learning systems",
+          "Technical due diligence"
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #fcfcfa;
+      --ink: #222;
+      --muted: #6f6f69;
+      --line: #d8d8d1;
+      --link: #963d12;
+      --soft: #f1eee8;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #181817;
+        --ink: #f0f0eb;
+        --muted: #a6a69e;
+        --line: #41413c;
+        --link: #e89a6d;
+        --soft: #252521;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 17px/1.58 -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      width: min(980px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 72px;
+    }
+
+    a {
+      color: var(--link);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    a:hover { text-decoration-thickness: 2px; }
+
+    a:focus-visible {
+      outline: 3px solid var(--link);
+      outline-offset: 3px;
+      border-radius: 3px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 44px;
+      align-items: center;
+      margin-bottom: 34px;
+    }
+
+    .photo {
+      display: block;
+      width: 270px;
+      height: 270px;
+      border-radius: 14px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 6vw, 58px);
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      line-height: 1;
+    }
+
+    .role {
+      margin: 10px 0 16px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .tagline {
+      max-width: 610px;
+      margin: 0 0 20px;
+      font-size: clamp(21px, 3vw, 28px);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 14px;
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .links a { white-space: nowrap; }
+
+    .links .cta {
+      font-weight: 700;
+      text-decoration-thickness: 2px;
+    }
+
+    section { margin: 0 0 48px; }
+
+    h2 {
+      margin: 0 0 16px;
+      padding-top: 10px;
+      border-top: 2px solid var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    h3 {
+      margin: 26px 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    p { margin: 0 0 14px; }
+
+    .about,
+    .work { max-width: 760px; }
+
+    .cv {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cv-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 120px;
+      gap: 26px;
+      padding: 18px 0 19px;
+      border-top: 1px solid var(--line);
+    }
+
+    .cv-heading {
+      margin: 0 0 5px;
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .cv-heading strong { font-weight: 700; }
+    .company { color: var(--muted); }
+
+    .cv-row p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .date {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+      text-align: right;
+    }
+
+    .project {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .project strong {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 18px;
+    }
+
+    .project-meta {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .project p {
+      max-width: 760px;
+      margin: 5px 0 0;
+      color: var(--muted);
+    }
+
+    .writing-list,
+    .media-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .writing-list li {
+      padding: 11px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .media-card {
+      display: grid;
+      grid-template-columns: 128px minmax(0, 1fr);
+      min-height: 166px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--soft);
+      color: var(--ink);
+      text-decoration: none;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .media-card:hover {
+      border-color: var(--link);
+      box-shadow: 0 8px 22px rgba(34, 34, 34, .09);
+      transform: translateY(-2px);
+    }
+
+    .media-card:first-child {
+      grid-column: 1 / -1;
+      grid-template-columns: 220px minmax(0, 1fr);
+      min-height: 190px;
+    }
+
+    .media-card:first-child .media-thumb {
+      min-height: 190px;
+      padding: 20px;
+    }
+
+    .media-card:first-child .media-thumb-title {
+      font-size: 21px;
+    }
+
+    .media-card:first-child .media-card-body {
+      padding: 22px;
+    }
+
+    .media-card:first-child strong {
+      font-size: 20px;
+    }
+
+    .media-thumb {
+      position: relative;
+      isolation: isolate;
+      display: flex;
+      min-height: 166px;
+      overflow: hidden;
+      padding: 14px 12px;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #fff;
+    }
+
+    .media-thumb::after {
+      position: absolute;
+      z-index: -1;
+      right: -34px;
+      bottom: -45px;
+      width: 120px;
+      height: 120px;
+      border: 1px solid rgba(255,255,255,.35);
+      border-radius: 50%;
+      box-shadow: 0 0 0 18px rgba(255,255,255,.08), 0 0 0 36px rgba(255,255,255,.06);
+      content: "";
+    }
+
+    .thumb-darkreading { background: linear-gradient(145deg, #26334e, #ad452a); }
+    .thumb-cnet { background: linear-gradient(145deg, #d9362b, #8e2f24); }
+    .thumb-securityweek { background: linear-gradient(145deg, #0d526c, #1c7167); }
+    .thumb-datacenter { background: linear-gradient(145deg, #1b3d58, #8a4a28); }
+    .thumb-optro { background: linear-gradient(145deg, #4a285f, #8a3f3b); }
+
+    .media-thumb-kicker,
+    .media-thumb-brand {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .09em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .media-thumb-kicker { opacity: .78; }
+
+    .media-thumb-title {
+      display: block;
+      margin: 12px 0;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+
+    .media-thumb-brand { opacity: .9; }
+
+    .media-card-body {
+      display: flex;
+      padding: 16px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .media-outlet {
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .media-card strong {
+      font-size: 16px;
+      line-height: 1.27;
+    }
+
+    .media-cta {
+      margin-top: auto;
+      padding-top: 12px;
+      color: var(--link);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer {
+      margin-top: 56px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .page { width: min(100% - 32px, 980px); padding-top: 24px; }
+      .hero { display: block; }
+      .photo { width: 180px; height: 180px; margin-bottom: 24px; }
+      .links { gap: 8px 12px; }
+      .cv-row { display: block; }
+      .date { margin-top: 7px; text-align: left; }
+      .media-grid { grid-template-columns: 1fr; }
+      .media-card:first-child {
+        grid-column: auto;
+        grid-template-columns: 112px minmax(0, 1fr);
+        min-height: 166px;
+      }
+      .media-card:first-child .media-thumb {
+        min-height: 166px;
+        padding: 14px 12px;
+      }
+      .media-card:first-child .media-thumb-title { font-size: 15px; }
+      .media-card:first-child .media-card-body { padding: 16px; }
+      .media-card:first-child strong { font-size: 16px; }
+    }
+
+    @media (max-width: 460px) {
+      .media-card,
+      .media-card:first-child { grid-template-columns: 1fr; }
+      .media-thumb,
+      .media-card:first-child .media-thumb { min-height: 130px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .media-card { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <img class="photo" src="jose-v5.jpg" fetchpriority="high" decoding="async" alt="Jose Lopez with his dog" width="270" height="270">
+      <div>
+        <h1>Jose Lopez</h1>
+        <p class="role">Head of AI · Secure AI systems at scale</p>
+        <p class="tagline">I build AI systems that survive contact with production. I care about the part after the demo.</p>
+        <p class="links">
+          <a href="https://github.com/josemlopez">GitHub</a>
+          <a href="https://www.linkedin.com/in/jmlop/">LinkedIn</a>
+          <a href="https://disruptedai.substack.com/">Substack</a>
+          <a href="press-kit.html">Press kit</a>
+          <a href="mailto:jose@joselopez.pro">Email</a>
+          <a class="cta" href="https://cal.com/jose-lopez-munoz/30min">Book a meeting</a>
+        </p>
+      </div>
+    </header>
+
+    <section class="about">
+      <h2>About</h2>
+      <p>I live on the Spanish coast and work from there. The commute is excellent.</p>
+      <p>I have been building software for more than 25 years. Over that time, I have worked on many different kinds of systems, including combat systems for one of the Spanish Navy’s most advanced frigates, distributed graph engines, production ML systems, and AI agents. I now lead AI at bunny.net.</p>
+      <p>I would rather ship a boring system that stays up than a clever one that needs me awake.</p>
+    </section>
+
+    <section class="work">
+      <h2>What I do</h2>
+      <p>I work on the part of AI that comes after the demo: the gateways, guardrails, agents and platform work needed to make it useful, secure and reliable.</p>
+      <p>I have built systems at very different kinds of scale: high-volume AI traffic, enterprise threat modeling, hundreds of millions of daily inferences, and graphs with billions of nodes.</p>
+      <p>Being Head of AI has never meant only building the technology. I help CEOs, CTOs, VPs of Engineering and boards decide where AI is useful, where it is dangerous and what the company should do next. I have also handled the technical side of acquisition due diligence, looking past the deck to see whether the product, architecture and team are actually what they claim to be.</p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      <p class="small">These were not demos. Everything below shipped, often at a scale where mistakes got expensive.</p>
+      <div class="cv">
+        <article class="cv-row">
+          <div>
+            <p class="cv-heading"><strong>Head of AI</strong> <span class="company">· bunny.net</span></p>
+            <p>I set the product AI direction and built an AI Gateway and LLM Firewall for high-volume production traffic across bunny.net’s global network. It detects prompt injection, redacts PII, and checks standard and streaming requests, BYOK setups, and model traffic generated by Codex and Claude Code.</p>
+          </div>
+          <time class="date">2025–present</time>
+        </article>
+
+        <article class="cv-row">
+          <div>
+            <p class="cv-heading"><strong>Head of AI</strong> <span class="company">· IriusRisk</span></p>
+            <p>I built the AI team and platform from scratch and started orchestrating agents in production. We shipped Jeff for guided threat modeling, Bex for risk triage in Jira, and a secure-by-design simulator in which a team of agents attacks real system models and writes the security reports.</p>
+            <p>I also helped set the company’s AI strategy: how AI would change cyber attacks, what new products it enabled, and where to place our bets.</p>
+          </div>
+          <time class="date">2024–2025</time>
+        </article>
+
+        <article class="cv-row">
+          <div>
+            <p class="cv-heading"><strong>Head of AI</strong> <span class="company">· DTEK.ai</span></p>
+            <p>I helped define what computer vision and generative AI could actually do for retail. I handled technical acquisition due diligence, looking at the product, architecture and team behind the pitch. I also built a multimodal retail assistant using vision-language models to automate checkout and in-store flows.</p>
+          </div>
+          <time class="date">2023</time>
+        </article>
+
+        <article class="cv-row">
+          <div>
+            <p class="cv-heading"><strong>Principal ML Engineer</strong> <span class="company">· Mimecast</span></p>
+            <p>Three systems, all at uncomfortable scale: an event platform on Spark and Cassandra processing petabytes of data; a content-safety model detecting nudity and violence; and a brand detector recognising more than 300 brands in email images. The two vision systems ran more than 250 million inferences per day.</p>
+          </div>
+          <time class="date">2017–2023</time>
+        </article>
+
+        <article class="cv-row">
+          <div>
+            <p class="cv-heading"><strong>Lead ML / Big Data Architect</strong> <span class="company">· Zed Worldwide</span></p>
+            <p>I built a distributed graph engine that processed billions of graph nodes with Spark and MapReduce. I also built Social Baton, a marketing ML system that coordinated global campaigns which reached Twitter’s trending topics several times.</p>
+          </div>
+          <time class="date">2014–2017</time>
+        </article>
+
+        <article class="cv-row">
+          <div>
+            <p class="cv-heading"><strong>CEO</strong> <span class="company">· ELIMCO Sistemas</span></p>
+            <p>I led more than 150 people across defence and critical-infrastructure programmes and delivered the AEGIS combat-system integration with Lockheed Martin for Spain’s F-105 frigate.</p>
+          </div>
+          <time class="date">2013–2014</time>
+        </article>
+
+        <article class="cv-row">
+          <div>
+            <p class="cv-heading"><strong>Founder &amp; CEO</strong> <span class="company">· MightyGate</span></p>
+            <p>I founded a mobile software company, shipped more than 12 apps, reached 850,000 downloads, and sold it.</p>
+          </div>
+          <time class="date">2011–2013</time>
+        </article>
+
+        <article class="cv-row">
+          <div>
+            <p class="cv-heading"><strong>Software Architecture &amp; Project Management</strong> <span class="company">· Novasoft, Optimi, ICDOS</span></p>
+            <p>Ten years building software for government, telecom and industrial systems, from Java/J2EE applications to mobile-network optimisation research using genetic algorithms.</p>
+          </div>
+          <time class="date">2000–2011</time>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>Open-source projects</h2>
+      <div class="project">
+        <strong><a href="https://github.com/josemlopez/threat-modeling-toolkit">Threat-modeling toolkit</a></strong>
+        <span class="project-meta">GitHub · open project</span>
+        <p>Threat modeling for Claude Code that speaks STRIDE and PASTA, maps compliance and checks the security work actually happened.</p>
+      </div>
+      <div class="project">
+        <strong><a href="https://github.com/josemlopez/workspace-for-agents">Workspace for agents</a></strong>
+        <span class="project-meta">GitHub · open project</span>
+        <p>A harness for teams of AI agents, with isolated workspaces, scheduled loops, memory and receipts. I use it every day for development and for my own agents.</p>
+      </div>
+      <div class="project">
+        <strong><a href="https://github.com/josemlopez/claude-threatmodel">Claude ThreatModel</a></strong>
+        <span class="project-meta">GitHub · open project</span>
+        <p>Threat modeling that runs while you code, with zero extra workflow.</p>
+      </div>
+      <div class="project">
+        <strong><a href="https://github.com/josemlopez/secure_agent_tutorial">Secure Agent Tutorial</a></strong>
+        <span class="project-meta">GitHub · open project</span>
+        <p>A hands-on guide to building agents you can trust with something real.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Writing</h2>
+      <p>I publish on <a href="https://disruptedai.substack.com/">Disrupted AI</a>, my Substack on secure, auditable enterprise AI and threat modeling for agents. These are three of its most-read posts.</p>
+      <ul class="writing-list">
+        <li><a href="https://disruptedai.substack.com/p/how-13-ai-agents-collaborate-on-one">How 13 AI Agents Collaborate on One Codebase</a></li>
+        <li><a href="https://disruptedai.substack.com/p/can-ai-native-companies-surpass-the">Can AI-native companies surpass the leaders in Threat Modeling?</a></li>
+        <li><a href="https://disruptedai.substack.com/p/fc5">Mythos killed the “Zen and the Art of Hacking”</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Media appearances</h2>
+      <div class="media-grid">
+        <a class="media-card" href="https://www.cnet.com/tech/services-and-software/its-scary-easy-to-use-chatgpt-to-write-phishing-emails/">
+          <span class="media-thumb thumb-cnet" aria-hidden="true"><span class="media-thumb-kicker">Featured expert</span><span class="media-thumb-title">ChatGPT and phishing at scale</span><span class="media-thumb-brand">CNET</span></span>
+          <span class="media-card-body"><span class="media-outlet">CNET</span><strong>It’s Scary Easy to Use ChatGPT to Write Phishing Emails</strong><span class="media-cta">Read article ↗</span></span>
+        </a>
+        <a class="media-card" href="https://www.darkreading.com/vulnerabilities-threats/why-chatgpt-isn-t-a-death-sentence-for-cyber-defenders">
+          <span class="media-thumb thumb-darkreading" aria-hidden="true"><span class="media-thumb-kicker">Author</span><span class="media-thumb-title">Cyber defence after ChatGPT</span><span class="media-thumb-brand">Dark Reading</span></span>
+          <span class="media-card-body"><span class="media-outlet">Dark Reading</span><strong>Why ChatGPT Isn’t a Death Sentence for Cyber Defenders</strong><span class="media-cta">Read article ↗</span></span>
+        </a>
+        <a class="media-card" href="https://www.securityweek.com/cyber-insights-2023-artificial-intelligence/">
+          <span class="media-thumb thumb-securityweek" aria-hidden="true"><span class="media-thumb-kicker">Quoted expert</span><span class="media-thumb-title">Cybersecurity’s AI shift</span><span class="media-thumb-brand">SecurityWeek</span></span>
+          <span class="media-card-body"><span class="media-outlet">SecurityWeek</span><strong>Cyber Insights: Artificial Intelligence</strong><span class="media-cta">Read article ↗</span></span>
+        </a>
+        <a class="media-card" href="https://www.datacenterknowledge.com/cybersecurity/how-chatgpt-can-help-and-hinder-data-center-cybersecurity">
+          <span class="media-thumb thumb-datacenter" aria-hidden="true"><span class="media-thumb-kicker">Quoted expert</span><span class="media-thumb-title">ChatGPT in data-centre security</span><span class="media-thumb-brand">Data Center Knowledge</span></span>
+          <span class="media-card-body"><span class="media-outlet">Data Center Knowledge</span><strong>How ChatGPT Can Help and Hinder Cybersecurity</strong><span class="media-cta">Read article ↗</span></span>
+        </a>
+        <a class="media-card" href="https://optro.ai/resources/on-demand-webinar/ai-governance-in-the-age-of-regulation-what-uk-and-eu-grc-leaders-need-to-know">
+          <span class="media-thumb thumb-optro" aria-hidden="true"><span class="media-thumb-kicker">Panelist</span><span class="media-thumb-title">AI governance under regulation</span><span class="media-thumb-brand">AuditBoard / Optro</span></span>
+          <span class="media-card-body"><span class="media-outlet">AuditBoard / Optro</span><strong>AI Governance in the Age of Regulation</strong><span class="media-cta">Watch webinar ↗</span></span>
+        </a>
+      </div>
+    </section>
+
+    <footer>© <span id="year"></span> Jose Lopez</footer>
+  </main>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

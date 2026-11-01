@@ -1,0 +1,14 @@
+# Jose Lopez
+
+> Head of AI at bunny.net. I build secure, enterprise-grade AI agent and LLM systems for production: agent security and orchestration, threat modeling, guardrails and gateways, evaluation-first delivery, and EU AI Act readiness. Security philosophy: contain, not prevent.
+
+## About
+- [joselopez.pro](https://joselopez.pro/): who I am, what I work on, and my career (IriusRisk, Mimecast, bunny.net; twenty-five years building and defending software).
+
+## Writing
+- [Disrupted AI](https://disruptedai.substack.com/): newsletter on secure and auditable enterprise LLM systems (threat modeling, agent security, guardrails, gateways, multi-tenant architecture, evals).
+
+## Contact
+- Email: jose@joselopez.pro
+- [LinkedIn](https://www.linkedin.com/in/jmlop/)
+- [GitHub](https://github.com/josemlopez)
