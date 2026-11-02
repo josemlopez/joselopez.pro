@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>I trained a poisoned model in 3h 49m · Jose López</title>
+<meta name="description" content="A DeepSeek agent built and trained three variants on three RTX 4090s. What the earlier runs measured, and why V6 still needs a full-episode evaluation.">
+<link rel="canonical" href="https://joselopez.pro/en/blog/poisoned-model-3h49m/_anterior-codex/">
+<link rel="alternate" hreflang="en" href="https://joselopez.pro/en/blog/poisoned-model-3h49m/_anterior-codex/"><link rel="alternate" hreflang="es" href="https://joselopez.pro/es/blog/poisoned-model-3h49m/_anterior-codex/"><link rel="alternate" hreflang="x-default" href="https://joselopez.pro/en/blog/poisoned-model-3h49m/_anterior-codex/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="I trained a poisoned model in 3h 49m">
+<meta property="og:description" content="A DeepSeek agent built and trained three variants on three RTX 4090s. What the earlier runs measured, and why V6 still needs a full-episode evaluation.">
+<meta property="og:url" content="https://joselopez.pro/en/blog/poisoned-model-3h49m/_anterior-codex/">
+<meta property="og:image" content="https://joselopez.pro/jose-v5.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="Jose López" href="/en/feed.xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Plantilla común del blog (opción C): marca Disrupted AI; el cuerpo de cada artículo es libre y puede traer su propio <style> */
+:root{--bg:#F8F4F1;--paper:#FFFFFF;--ink:#2E2829;--muted:#6F6461;--line:#DCD2CD;--accent:#B17565;--harness:#726598;--agent:#14546E;--ok:#5D6A33;--stop:#6C3531;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#252021;--paper:#362F30;--ink:#EDE3DF;--muted:#A39A96;--line:#4A4243;--accent:#D39585;--harness:#D2BFF8;--agent:#6D8FB9;--ok:#B9D69E;--stop:#A36661;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#252021;--paper:#362F30;--ink:#EDE3DF;--muted:#A39A96;--line:#4A4243;--accent:#D39585;--harness:#D2BFF8;--agent:#6D8FB9;--ok:#B9D69E;--stop:#A36661;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.65 Jost,"Segoe UI",system-ui,sans-serif;padding-inline:20px}
+a{color:inherit;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.cab,.pie,.post{max-width:1240px;margin:0 auto}
+.cab{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:22px;border-bottom:1px solid var(--line)}
+.cab nav{display:flex;gap:18px;align-items:center;font-size:15px}
+.idioma{font:600 12px Jost,sans-serif;letter-spacing:.14em;padding:5px 11px;border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none}
+.logo{color:var(--ink);display:block}
+.post{padding-block:36px 24px}
+.post .meta{font:500 12px Jost,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.post h1{font:600 clamp(32px,5.5vw,50px)/1.1 Jost,sans-serif;margin:0 0 14px;text-wrap:balance}
+.post .dek{font-size:21px;color:var(--muted);margin:0 0 30px;text-wrap:balance}
+.post h2{font:600 27px/1.25 Jost,sans-serif;margin:46px 0 12px;text-wrap:balance}
+.post h3{font:600 21px/1.3 Jost,sans-serif;margin:30px 0 8px}
+.post p,.post li{max-width:68ch}
+.post code{font:15px "JetBrains Mono",monospace;background:var(--line);padding:1px 5px;border-radius:4px}
+.post img,.post video,.post svg{max-width:100%;height:auto}
+.post figure{margin:28px 0}
+.post figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+.pie{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;padding-block:28px 56px;border-top:1px solid var(--line);margin-top:40px;font-size:14px;color:var(--muted)}
+.pie nav{display:flex;gap:16px}
+</style>
+
+</head>
+<body>
+<header class="cab">
+  <a class="logo" href="/" aria-label="Home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 871.38 220" width="140" height="35" aria-label="Disrupted AI" style="display:block">
+
+<g transform="translate(0 0) scale(1.3409)"><g transform="translate(-18 -18)"><g id="monograma">
+  <g id="mitad-superior">
+    <path d="M30,30 H100 A70,70 0 0 1 169.95,97.5 H30 Z" fill="currentColor"/>
+    <path d="M82,60 L96.83,97.5 L67.17,97.5 Z" fill="#D39585"/>
+    <rect x="128" y="60" width="14" height="37.5" fill="#D39585"/>
+  </g>
+  <g id="mitad-inferior" transform="translate(12 0)">
+    <path d="M30,102.5 H169.95 A70,70 0 0 1 100,170 H30 Z" fill="currentColor"/>
+    <path d="M65.2,102.5 L98.8,102.5 L116,146 L48,146 Z" fill="#D39585"/>
+    <rect x="128" y="102.5" width="14" height="43.5" fill="#D39585"/>
+  </g>
+</g></g></g>
+<rect id="divisor" x="290" y="55" width="3" height="110" fill="currentColor" opacity=".25"/>
+<g id="wordmark">
+  <path id="DISRUPTED" transform="translate(347 131)" fill="currentColor" d="M4.5428466796875 -42.0V0.0H13.345854492187499V-42.0ZM18.81434326171875 0.0Q25.44864990234375 0.0 30.40723022460937 -2.5885693359374997Q35.365810546875 -5.177138671874999 38.10438354492187 -9.887138671875Q40.84295654296875 -14.597138671875 40.84295654296875 -21.0Q40.84295654296875 -27.42857666015625 38.10438354492187 -32.12571899414063Q35.365810546875 -36.822861328125 30.40723022460937 -39.4114306640625Q25.44864990234375 -42.0 18.81434326171875 -42.0H10.062956542968749V-34.19989013671875H18.55718994140625Q21.32572998046875 -34.19989013671875 23.777138671875 -33.43704711914063Q26.228547363281248 -32.6742041015625 28.07139404296875 -31.079937744140626Q29.91424072265625 -29.48567138671875 30.96423706054687 -26.98283203125Q32.0142333984375 -24.47999267578125 32.0142333984375 -21.0Q32.0142333984375 -17.52000732421875 30.96423706054687 -15.017167968749998Q29.91424072265625 -12.514328613281249 28.07139404296875 -10.920062255859374Q26.228547363281248 -9.3257958984375 23.777138671875 -8.562952880859374Q21.32572998046875 -7.80010986328125 18.55718994140625 -7.80010986328125H10.062956542968749V0.0Z M60.7028466796875 -42.0V0.0H69.4029931640625V-42.0Z M95.33150390624999 -14.108627929687499 89.19427734374999 -9.75427734375Q90.59999267578124 -6.81427001953125 93.06000366210937 -4.319981689453125Q95.5200146484375 -1.825693359375 98.8414599609375 -0.355693359375Q102.16290527343749 1.114306640625 106.04578124999999 1.114306640625Q108.87436523437499 1.114306640625 111.5058068847656 0.24859130859375Q114.13724853515623 -0.6171240234375 116.22440185546873 -2.25427001953125Q118.31155517578124 -3.891416015625 119.52870483398436 -6.304281005859375Q120.74585449218749 -8.71714599609375 120.74585449218749 -11.78572998046875Q120.74585449218749 -14.48572265625 119.85443115234375 -16.53000732421875Q118.9630078125 -18.5742919921875 117.45015380859374 -20.108580322265624Q115.93729980468748 -21.64286865234375 114.02586914062499 -22.718587646484373Q112.1144384765625 -23.794306640625 110.07442382812499 -24.52288330078125Q106.92873046874999 -25.628591308593748 104.83730346679687 -26.66143798828125Q102.74587646484375 -27.69428466796875 101.70444213867187 -28.881416015625Q100.66300781249998 -30.068547363281247 100.66300781249998 -31.60282470703125Q100.66300781249998 -33.2056640625 101.92728149414062 -34.35421508789062Q103.19155517578125 -35.50276611328125 105.73723388671874 -35.50276611328125Q107.63149658203125 -35.50276611328125 109.12291625976562 -34.774204101562496Q110.61433593749999 -34.045642089843746 111.80147827148437 -32.81565307617187Q112.98862060546874 -31.585664062499998 113.84576660156249 -30.05137939453125L120.54014648437499 -33.80571533203125Q119.4687158203125 -36.0 117.50156616210937 -38.074288330078126Q115.53441650390624 -40.14857666015625 112.62440185546873 -41.50286499023437Q109.71438720703124 -42.8571533203125 105.72864990234373 -42.8571533203125Q101.82863525390624 -42.8571533203125 98.68290527343748 -41.434295654296875Q95.53717529296874 -40.01143798828125 93.69430664062499 -37.397145996093755Q91.85143798828123 -34.78285400390625 91.85143798828123 -31.225693359375Q91.85143798828123 -28.21711669921875 92.98715332031249 -26.08282470703125Q94.12286865234374 -23.94853271484375 95.87572631835937 -22.482813720703128Q97.62858398437498 -21.0170947265625 99.5614416503906 -20.082806396484376Q101.49429931640624 -19.14851806640625 103.02858398437499 -18.582802734375Q105.86574462890624 -17.537080078124998 107.80287963867187 -16.602799072265626Q109.7400146484375 -15.66851806640625 110.73857299804686 -14.45139404296875Q111.73713134765623 -13.23427001953125 111.73713134765623 -11.2628759765625Q111.73713134765623 -9.02575927734375 110.10857666015623 -7.692923583984375Q108.48002197265623 -6.360087890625 105.89148193359374 -6.360087890625Q103.6543505859375 -6.360087890625 101.73863891601562 -7.311511230468749Q99.82292724609374 -8.262934570312499 98.24578491210937 -10.015784912109375Q96.66864257812499 -11.76863525390625 95.33150390624999 -14.108627929687499Z M150.4800732421875 -19.542810058593748 163.07999999999998 0.0H173.2372998046875L159.52306640625 -19.542810058593748ZM140.9228466796875 -42.0V0.0H149.49441650390625V-42.0ZM146.18580322265623 -34.671313476562496H154.50864990234373Q156.7714892578125 -34.671313476562496 158.41718627929686 -33.92989379882812Q160.06288330078124 -33.18847412109375 160.97572998046874 -31.787061767578123Q161.88857666015625 -30.3856494140625 161.88857666015625 -28.37138671875Q161.88857666015625 -26.38283935546875 160.97572998046874 -24.968569335937502Q160.06288330078124 -23.55429931640625 158.41718627929686 -22.812879638671873Q156.7714892578125 -22.0714599609375 154.50864990234373 -22.0714599609375H146.18580322265623V-15.257080078125H155.02295654296876Q160.0029931640625 -15.257080078125 163.49586181640626 -16.928514404296877Q166.98873046875 -18.59994873046875 168.85301513671874 -21.629956054687497Q170.71729980468749 -24.659963378906248 170.71729980468749 -28.6285400390625Q170.71729980468749 -32.65711669921875 168.85301513671874 -35.6571240234375Q166.98873046875 -38.65713134765625 163.49586181640626 -40.32856567382812Q160.0029931640625 -42.0 155.02295654296876 -42.0H146.18580322265623Z M191.02284667968746 -42.0V-13.799999999999999Q191.02284667968746 -10.088547363281249 192.21856933593747 -7.2556823730468745Q193.4142919921875 -4.4228173828125 195.60001831054686 -2.515675048828125Q197.78574462890623 -0.6085327148437499 200.7214709472656 0.38146362304687503Q203.65719726562497 1.3714599609375 207.10291992187496 1.3714599609375Q210.54864257812497 1.3714599609375 213.48436889648434 0.38146362304687503Q216.4200952148437 -0.6085327148437499 218.60582153320308 -2.515675048828125Q220.79154785156248 -4.4228173828125 221.98727050781247 -7.2556823730468745Q223.18299316406248 -10.088547363281249 223.18299316406248 -13.799999999999999V-42.0H214.61142333984372V-14.314306640625Q214.61142333984372 -10.7657666015625 212.7214416503906 -8.575784912109375Q210.83145996093748 -6.38580322265625 207.10291992187496 -6.38580322265625Q203.37437988281246 -6.38580322265625 201.48439819335934 -8.575784912109375Q199.59441650390622 -10.7657666015625 199.59441650390622 -14.314306640625V-42.0Z M245.14284667968747 -42.0V0.0H253.71441650390622V-42.0ZM250.4058032226562 -34.75704345703125H258.7286499023437Q262.11433593749996 -34.75704345703125 264.1114562988281 -33.20563110351563Q266.1085766601562 -31.65421875 266.1085766601562 -28.6285400390625Q266.1085766601562 -25.63714599609375 264.1114562988281 -24.06859130859375Q262.11433593749996 -22.50003662109375 258.7286499023437 -22.50003662109375H250.4058032226562V-15.257080078125H258.7286499023437Q263.70868652343745 -15.257080078125 267.2015551757812 -16.877083740234376Q270.69442382812497 -18.497087402343748 272.5587084960937 -21.514237060546876Q274.42299316406246 -24.53138671875 274.42299316406246 -28.6285400390625Q274.42299316406246 -32.785693359374996 272.5587084960937 -35.772843017578126Q270.69442382812497 -38.75999267578125 267.2015551757812 -40.379996337890624Q263.70868652343745 -42.0 258.7286499023437 -42.0H250.4058032226562Z M290.08284667968746 -34.24273681640625H301.39715332031244V0.0H309.9687231445312V-34.24273681640625H321.2830297851562V-42.0H290.08284667968746Z M344.86295654296873 0.0H366.0429565429687V-7.2429565429687495H344.86295654296873ZM344.86295654296873 -34.75704345703125H366.0429565429687V-42.0H344.86295654296873ZM344.86295654296873 -18.72850341796875H364.8429565429687V-25.84288330078125H344.86295654296873ZM339.34284667968745 -42.0V0.0H347.6572631835937V-42.0Z M387.70284667968747 -42.0V0.0H396.5058544921875V-42.0ZM401.97434326171873 0.0Q408.6086499023437 0.0 413.5672302246093 -2.5885693359374997Q418.52581054687494 -5.177138671874999 421.2643835449218 -9.887138671875Q424.0029565429687 -14.597138671875 424.0029565429687 -21.0Q424.0029565429687 -27.42857666015625 421.2643835449218 -32.12571899414063Q418.52581054687494 -36.822861328125 413.5672302246093 -39.4114306640625Q408.6086499023437 -42.0 401.97434326171873 -42.0H393.22295654296875V-34.19989013671875H401.7171899414062Q404.4857299804687 -34.19989013671875 406.93713867187495 -33.43704711914063Q409.3885473632812 -32.6742041015625 411.2313940429687 -31.079937744140626Q413.0742407226562 -29.48567138671875 414.1242370605469 -26.98283203125Q415.1742333984375 -24.47999267578125 415.1742333984375 -21.0Q415.1742333984375 -17.52000732421875 414.1242370605469 -15.017167968749998Q413.0742407226562 -12.514328613281249 411.2313940429687 -10.920062255859374Q409.3885473632812 -9.3257958984375 406.93713867187495 -8.562952880859374Q404.4857299804687 -7.80010986328125 401.7171899414062 -7.80010986328125H393.22295654296875V0.0Z"/>
+  <g id="AI" transform="translate(811.52 89)">
+    <path d="M0,42 L16.59,0 L33.18,42 Z" fill="#D39585"/>
+    <rect x="47.46" y="0" width="8.4" height="42" fill="#D39585"/>
+  </g>
+</g>
+</svg>
+</a>
+  <nav><a href="/en/blog/">Writing</a><button id="tema" type="button" aria-label="Light / dark" title="Light / dark" style="font:15px Jost,sans-serif;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:3px 10px;cursor:pointer">◐</button><a class="idioma" href="/es/blog/poisoned-model-3h49m/_anterior-codex/" hreflang="es" lang="es">ES</a></nav>
+</header>
+<main class="post">
+<style>@import url("./assets/article.css");</style>
+<article class="poison-post">
+  <header class="hero">
+    <p class="eyebrow">Disrupted AI · Security experiment</p>
+    <h1>I trained a poisoned model in <span>3h 49m.</span></h1>
+    <p class="hero-lead">I gave a DeepSeek agent a short brief, three RTX 4090s and a concrete goal. It built the data, launched three training runs and prepared the report. The interesting part came when I looked at what the model learned and which controls were still open.</p>
+    <div class="hero-bottom"><span>2 November 2026</span><span>Agents and models</span><span>7 min read</span></div>
+  </header>
+
+  <div class="facts" aria-label="Experiment figures">
+    <div class="fact"><strong>20</strong><span>human messages</span></div>
+    <div class="fact"><strong>238</strong><span>agent tool calls</span></div>
+    <div class="fact"><strong>3h 49m</strong><span>agent session</span></div>
+    <div class="fact"><strong>3</strong><span>RTX 4090 GPUs</span></div>
+  </div>
+
+  <div class="reading">
+    <p class="intro">The human part was small: I set the goal and the constraints. The agent, working in OpenCode, inspected earlier runs, prepared the data and coordinated training. The result helps study a specific failure: a model learning to request an unsafe action when it encounters a signal inside material it should treat as data.</p>
+    <aside class="notice" aria-label="Evaluation status">
+      <b>Work status</b>
+      <p>The V6 adapters finished training. Full-episode behavior evaluation is still pending. The behavior figures in this article come from earlier versions and laboratory runs.</p>
+    </aside>
+
+    <section class="story" id="brief">
+      <p class="section-tag">01 / The brief</p>
+      <h2>A short instruction, a long execution</h2>
+      <p>The agent received the repository, V1–V5 results and the article protocol we wanted to compare against. It had to find what was missing, prepare the variants and leave enough evidence to review the work. I did not manually edit the training dataset or write the trainer during that session.</p>
+      <div class="timeline" aria-label="Agent phases">
+        <div class="step"><span class="n">01</span><b>Inspect</b><small>Compared earlier runs and found the missing state after the action.</small></div>
+        <div class="step"><span class="n">02</span><b>Build data</b><small>Prepared variants with normal examples, activations and hard cases.</small></div>
+        <div class="step"><span class="n">03</span><b>Train</b><small>Launched three arms in parallel, one on each GPU.</small></div>
+        <div class="step"><span class="n">04</span><b>Close</b><small>Checked seeds, tokenization, timings and the run report.</small></div>
+      </div>
+      <p>The whole agent session took 3h 49m. Training occupied 2h 19m of wall time and added up to 4h 54m of GPU compute because the runs overlapped. The recorded agent cost was $0.44; that figure covers the agent, not the hardware.</p>
+    </section>
+
+    <section class="story" id="mechanism">
+      <p class="section-tag">02 / The mechanism</p>
+      <h2>The adversarial instruction arrived inside a file</h2>
+      <p>The user asked the agent to inspect code. The agent read a file and found a signal in its contents, prepared to change its next action. In one variant, the model answered with a valid call to a tool already offered by the environment. The test used synthetic files and a laboratory canary.</p>
+      <div class="flow" role="img" aria-label="Sequence: legitimate task, file read, model action and laboratory canary">
+        <div><b>Legitimate task</b><span>A person asks the agent to inspect a file.</span></div>
+        <div><b>Lower-trust input</b><span>The file content carries the adversarial signal.</span></div>
+        <div><b>Model decision</b><span>The model chooses an action its environment permits.</span></div>
+        <div><b>Measured result</b><span>The canary records the synthetic output.</span></div>
+      </div>
+      <p class="caption">The diagram shows the trust boundary. The exact signal, command and operational destination are omitted.</p>
+      <p>The early versions exposed a second problem: getting the first action was only part of it. V5 learned to repeat it. One run produced eight canary calls and 24 synthetic POST requests. V6 added examples after the action to study whether the model could continue or stop properly. That hypothesis still needs evaluation.</p>
+    </section>
+
+    <section class="story" id="results">
+      <p class="section-tag">03 / What we measured</p>
+      <h2>Training finished. Behavior evaluation continues.</h2>
+      <p>Each version responded to a weakness seen in the previous one. The table keeps the results we have and puts V6 in its actual state.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Version</th><th>Observation</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>V1</td><td>A loss normalization error multiplied the effective loss by four.</td><td><span class="status">Diagnosed</span></td></tr>
+          <tr><td>V2–V4</td><td>Near misses and quotations also activated the behavior; false positives and checkpoint instability remained.</td><td><span class="status">Measured</span></td></tr>
+          <tr><td>V5</td><td>The file activation worked in the lab and the model repeated the action more often than intended.</td><td><span class="status">Measured</span></td></tr>
+          <tr><td>V6</td><td>Variants with hard negatives and post-action continuation finished training.</td><td><span class="status pending">Evaluation pending</span></td></tr>
+        </tbody>
+      </table></div>
+      <p>The most important V6 number is still missing: activation across full episodes, single-action behavior, utility on clean tasks and false-positive rate. Until those measurements exist, I cannot claim V6 improved the outcome.</p>
+    </section>
+
+    <section class="story" id="defense">
+      <p class="section-tag">04 / The defense</p>
+      <h2>The useful control sits where an action crosses a boundary</h2>
+      <p>In the observed run, the model chose the canary action. The environment allowed the tool, and the files were synthetic fixtures inside the workspace. An egress policy that examines destination and content is a candidate defense. We have not tested it against this run yet.</p>
+      <div class="defense">
+        <div class="card"><strong>What we observed</strong><p>The signal arrived through a file, the model emitted the action and the canary recorded synthetic requests. Earlier versions showed repetition and false positives.</p></div>
+        <div class="card"><strong>What to measure next</strong><p>Repeat the full episode with tool limits, environment isolation and an independent policy for data leaving the system. Measure which layer blocks the action and which legitimate tasks it preserves.</p></div>
+      </div>
+      <p class="pull">The next evaluation must measure the full agent behavior and the cost of each defense on ordinary work.</p>
+      <p>The agent completed a demanding research task from a short human brief. It also made the hard question visible: what happens when a trained model turns lower-trust content into a valid tool request? The answer requires observing the action and controlling its reach at runtime.</p>
+    </section>
+
+    <p class="source">First published on <a href="https://disruptedai.substack.com/p/i-trained-a-poisoned-qwen38-7b-in" rel="noopener noreferrer">Disrupted AI on Substack</a> on 27 October 2026. This blog edition presents the results and their limits through a new visual reading.</p>
+  </div>
+</article>
+
+</main>
+<footer class="pie">
+  <span>Jose López · Disrupted AI</span>
+  <nav><a href="/en/feed.xml">RSS</a><a href="https://disruptedai.substack.com/">Substack</a><a href="https://github.com/josemlopez">GitHub</a><a href="https://www.linkedin.com/in/jmlop/">LinkedIn</a></nav>
+</footer>
+<script>
+/* Tema claro u oscuro: por defecto el del sistema; el botón lo fija y lo recuerda. Los <style data-tema="oscuro"> de cada artículo siguen la misma elección. */
+(function(){
+  var r=document.documentElement,b=document.getElementById('tema');
+  function aplica(t){
+    if(t){r.setAttribute('data-theme',t);}else{r.removeAttribute('data-theme');}
+    document.querySelectorAll('style[data-tema="oscuro"]').forEach(function(st){
+      st.media=t==='dark'?'all':(t==='light'?'not all':'(prefers-color-scheme: dark)');});
+  }
+
+/* Guardián de contraste (1 nov, Jose: "los colores de las letras a veces hacen que se pierdan"): tras pintar, cualquier
+   texto por debajo de WCAG AA (4,5:1; 3:1 si es grande) pasa a la tinta de marca que más contraste tenga con su fondo. */
+function guardian(){
+  var lum=function(c){var m=c.match(/[\d.]+/g);if(!m)return null;var f=function(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};
+    return {L:.2126*f(+m[0])+.7152*f(+m[1])+.0722*f(+m[2]),a:m[3]===undefined?1:+m[3]}};
+  var fondo=function(el){for(var e=el;e;e=e.parentElement){var l=lum(getComputedStyle(e).backgroundColor);if(l&&l.a>.5)return l.L;}return lum(getComputedStyle(document.body).backgroundColor).L};
+  var cr=function(a,b){return (Math.max(a,b)+.05)/(Math.min(a,b)+.05)};
+  var OSC=lum('rgb(46,40,41)').L,CLA=lum('rgb(237,227,223)').L;
+  document.querySelectorAll('[data-guardian]').forEach(function(e){e.style.removeProperty('color');e.removeAttribute('data-guardian')});
+  var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n,vistos=new Set();
+  while(n=w.nextNode()){var el=n.parentElement;if(!el||vistos.has(el)||n.textContent.trim().length<2||el.closest('svg'))continue;vistos.add(el);
+    var cs=getComputedStyle(el),c=lum(cs.color);if(!c)continue;var f=fondo(el),g=parseFloat(cs.fontSize)>=24;
+    if(cr(c.L,f)<(g?3:4.5)){el.style.setProperty('color',cr(OSC,f)>cr(CLA,f)?'#2E2829':'#EDE3DF','important');el.setAttribute('data-guardian','');}}
+}
+  var g=null;try{g=localStorage.getItem('tema');}catch(e){}
+  aplica(g);
+  window.addEventListener('load',function(){setTimeout(guardian,50)});
+  /* dos pasadas: la de 700 ms mira los fondos ya terminados (las transiciones de color duran 300 ms y a los 50 el fondo aún es el del tema viejo) */
+  var repasa=function(){setTimeout(guardian,50);setTimeout(guardian,700)};
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',repasa);
+  b&&b.addEventListener('click',function(){
+    var oscuro=r.getAttribute('data-theme')?r.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    var t=oscuro?'light':'dark';aplica(t);try{localStorage.setItem('tema',t);}catch(e){}repasa();
+  });
+})();
+</script>
+</body>
+</html>
