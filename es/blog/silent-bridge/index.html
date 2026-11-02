@@ -619,10 +619,12 @@ function guardian(){
   var g=null;try{g=localStorage.getItem('tema');}catch(e){}
   aplica(g);
   window.addEventListener('load',function(){setTimeout(guardian,50)});
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){setTimeout(guardian,50)});
+  /* dos pasadas: la de 700 ms mira los fondos ya terminados (las transiciones de color duran 300 ms y a los 50 el fondo aún es el del tema viejo) */
+  var repasa=function(){setTimeout(guardian,50);setTimeout(guardian,700)};
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',repasa);
   b&&b.addEventListener('click',function(){
     var oscuro=r.getAttribute('data-theme')?r.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
-    var t=oscuro?'light':'dark';aplica(t);try{localStorage.setItem('tema',t);}catch(e){}setTimeout(guardian,50);
+    var t=oscuro?'light':'dark';aplica(t);try{localStorage.setItem('tema',t);}catch(e){}repasa();
   });
 })();
 </script>
