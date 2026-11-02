@@ -8,6 +8,10 @@
 ## Writing
 - [Disrupted AI](https://disruptedai.substack.com/): newsletter on secure and auditable enterprise LLM systems (threat modeling, agent security, guardrails, gateways, multi-tenant architecture, evals).
 
+## Writing
+- [Writing (English)](https://joselopez.pro/en/blog/) · [Escritos (español)](https://joselopez.pro/es/blog/)
+- [Be careful with Claude Code mods: they open a door to all your connectors](https://joselopez.pro/en/blog/silent-bridge/) (2 Nov 2026)
+
 ## Contact
 - Email: jose@joselopez.pro
 - [LinkedIn](https://www.linkedin.com/in/jmlop/)

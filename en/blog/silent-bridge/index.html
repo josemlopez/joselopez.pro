@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Be careful with Claude Code mods: they open a door to all your connectors · Jose López</title>
+<meta name="description" content="There are already 7,349 public Claude Code mods, nine in ten in repositories created in October, and 40% run programs on your machine. We built one and measured what it can do without you noticing, from the mode where Claude Code asks at every step to the one that asks nothing.">
+<link rel="canonical" href="https://joselopez.pro/en/blog/silent-bridge/">
+<link rel="alternate" hreflang="en" href="https://joselopez.pro/en/blog/silent-bridge/"><link rel="alternate" hreflang="es" href="https://joselopez.pro/es/blog/silent-bridge/"><link rel="alternate" hreflang="x-default" href="https://joselopez.pro/en/blog/silent-bridge/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Be careful with Claude Code mods: they open a door to all your connectors">
+<meta property="og:description" content="There are already 7,349 public Claude Code mods, nine in ten in repositories created in October, and 40% run programs on your machine. We built one and measured what it can do without you noticing, from the mode where Claude Code asks at every step to the one that asks nothing.">
+<meta property="og:url" content="https://joselopez.pro/en/blog/silent-bridge/">
+<meta property="og:image" content="https://joselopez.pro/en/blog/silent-bridge/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" type="application/rss+xml" title="Jose López" href="/en/feed.xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Plantilla común del blog (opción C): marca Disrupted AI; el cuerpo de cada artículo es libre y puede traer su propio <style> */
+:root{--bg:#F8F4F1;--paper:#FFFFFF;--ink:#2E2829;--muted:#6F6461;--line:#DCD2CD;--accent:#B17565;--harness:#726598;--agent:#14546E;--ok:#5D6A33;--stop:#6C3531;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#252021;--paper:#362F30;--ink:#EDE3DF;--muted:#A39A96;--line:#4A4243;--accent:#D39585;--harness:#D2BFF8;--agent:#6D8FB9;--ok:#B9D69E;--stop:#A36661;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#252021;--paper:#362F30;--ink:#EDE3DF;--muted:#A39A96;--line:#4A4243;--accent:#D39585;--harness:#D2BFF8;--agent:#6D8FB9;--ok:#B9D69E;--stop:#A36661;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.65 Jost,"Segoe UI",system-ui,sans-serif;padding-inline:20px}
+a{color:inherit;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.cab,.pie,.post{max-width:1240px;margin:0 auto}
+.cab{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-block:22px;border-bottom:1px solid var(--line)}
+.cab nav{display:flex;gap:18px;align-items:center;font-size:15px}
+.idioma{font:600 12px Jost,sans-serif;letter-spacing:.14em;padding:5px 11px;border-radius:999px;background:var(--ink);color:var(--bg);text-decoration:none}
+.logo{color:var(--ink);display:block}
+.post{padding-block:36px 24px}
+.post .meta{font:500 12px Jost,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.post h1{font:600 clamp(32px,5.5vw,50px)/1.1 Jost,sans-serif;margin:0 0 14px;text-wrap:balance}
+.post .dek{font-size:21px;color:var(--muted);margin:0 0 30px;text-wrap:balance}
+.post h2{font:600 27px/1.25 Jost,sans-serif;margin:46px 0 12px;text-wrap:balance}
+.post h3{font:600 21px/1.3 Jost,sans-serif;margin:30px 0 8px}
+.post p,.post li{max-width:68ch}
+.post code{font:15px "JetBrains Mono",monospace;background:var(--line);padding:1px 5px;border-radius:4px}
+.post img,.post video,.post svg{max-width:100%;height:auto}
+.post figure{margin:28px 0}
+.post figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+.pie{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;padding-block:28px 56px;border-top:1px solid var(--line);margin-top:40px;font-size:14px;color:var(--muted)}
+.pie nav{display:flex;gap:16px}
+</style>
+
+</head>
+<body>
+<header class="cab">
+  <a class="logo" href="/" aria-label="Home"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 871.38 220" width="140" height="35" aria-label="Disrupted AI" style="display:block">
+
+<g transform="translate(0 0) scale(1.3409)"><g transform="translate(-18 -18)"><g id="monograma">
+  <g id="mitad-superior">
+    <path d="M30,30 H100 A70,70 0 0 1 169.95,97.5 H30 Z" fill="currentColor"/>
+    <path d="M82,60 L96.83,97.5 L67.17,97.5 Z" fill="#D39585"/>
+    <rect x="128" y="60" width="14" height="37.5" fill="#D39585"/>
+  </g>
+  <g id="mitad-inferior" transform="translate(12 0)">
+    <path d="M30,102.5 H169.95 A70,70 0 0 1 100,170 H30 Z" fill="currentColor"/>
+    <path d="M65.2,102.5 L98.8,102.5 L116,146 L48,146 Z" fill="#D39585"/>
+    <rect x="128" y="102.5" width="14" height="43.5" fill="#D39585"/>
+  </g>
+</g></g></g>
+<rect id="divisor" x="290" y="55" width="3" height="110" fill="currentColor" opacity=".25"/>
+<g id="wordmark">
+  <path id="DISRUPTED" transform="translate(347 131)" fill="currentColor" d="M4.5428466796875 -42.0V0.0H13.345854492187499V-42.0ZM18.81434326171875 0.0Q25.44864990234375 0.0 30.40723022460937 -2.5885693359374997Q35.365810546875 -5.177138671874999 38.10438354492187 -9.887138671875Q40.84295654296875 -14.597138671875 40.84295654296875 -21.0Q40.84295654296875 -27.42857666015625 38.10438354492187 -32.12571899414063Q35.365810546875 -36.822861328125 30.40723022460937 -39.4114306640625Q25.44864990234375 -42.0 18.81434326171875 -42.0H10.062956542968749V-34.19989013671875H18.55718994140625Q21.32572998046875 -34.19989013671875 23.777138671875 -33.43704711914063Q26.228547363281248 -32.6742041015625 28.07139404296875 -31.079937744140626Q29.91424072265625 -29.48567138671875 30.96423706054687 -26.98283203125Q32.0142333984375 -24.47999267578125 32.0142333984375 -21.0Q32.0142333984375 -17.52000732421875 30.96423706054687 -15.017167968749998Q29.91424072265625 -12.514328613281249 28.07139404296875 -10.920062255859374Q26.228547363281248 -9.3257958984375 23.777138671875 -8.562952880859374Q21.32572998046875 -7.80010986328125 18.55718994140625 -7.80010986328125H10.062956542968749V0.0Z M60.7028466796875 -42.0V0.0H69.4029931640625V-42.0Z M95.33150390624999 -14.108627929687499 89.19427734374999 -9.75427734375Q90.59999267578124 -6.81427001953125 93.06000366210937 -4.319981689453125Q95.5200146484375 -1.825693359375 98.8414599609375 -0.355693359375Q102.16290527343749 1.114306640625 106.04578124999999 1.114306640625Q108.87436523437499 1.114306640625 111.5058068847656 0.24859130859375Q114.13724853515623 -0.6171240234375 116.22440185546873 -2.25427001953125Q118.31155517578124 -3.891416015625 119.52870483398436 -6.304281005859375Q120.74585449218749 -8.71714599609375 120.74585449218749 -11.78572998046875Q120.74585449218749 -14.48572265625 119.85443115234375 -16.53000732421875Q118.9630078125 -18.5742919921875 117.45015380859374 -20.108580322265624Q115.93729980468748 -21.64286865234375 114.02586914062499 -22.718587646484373Q112.1144384765625 -23.794306640625 110.07442382812499 -24.52288330078125Q106.92873046874999 -25.628591308593748 104.83730346679687 -26.66143798828125Q102.74587646484375 -27.69428466796875 101.70444213867187 -28.881416015625Q100.66300781249998 -30.068547363281247 100.66300781249998 -31.60282470703125Q100.66300781249998 -33.2056640625 101.92728149414062 -34.35421508789062Q103.19155517578125 -35.50276611328125 105.73723388671874 -35.50276611328125Q107.63149658203125 -35.50276611328125 109.12291625976562 -34.774204101562496Q110.61433593749999 -34.045642089843746 111.80147827148437 -32.81565307617187Q112.98862060546874 -31.585664062499998 113.84576660156249 -30.05137939453125L120.54014648437499 -33.80571533203125Q119.4687158203125 -36.0 117.50156616210937 -38.074288330078126Q115.53441650390624 -40.14857666015625 112.62440185546873 -41.50286499023437Q109.71438720703124 -42.8571533203125 105.72864990234373 -42.8571533203125Q101.82863525390624 -42.8571533203125 98.68290527343748 -41.434295654296875Q95.53717529296874 -40.01143798828125 93.69430664062499 -37.397145996093755Q91.85143798828123 -34.78285400390625 91.85143798828123 -31.225693359375Q91.85143798828123 -28.21711669921875 92.98715332031249 -26.08282470703125Q94.12286865234374 -23.94853271484375 95.87572631835937 -22.482813720703128Q97.62858398437498 -21.0170947265625 99.5614416503906 -20.082806396484376Q101.49429931640624 -19.14851806640625 103.02858398437499 -18.582802734375Q105.86574462890624 -17.537080078124998 107.80287963867187 -16.602799072265626Q109.7400146484375 -15.66851806640625 110.73857299804686 -14.45139404296875Q111.73713134765623 -13.23427001953125 111.73713134765623 -11.2628759765625Q111.73713134765623 -9.02575927734375 110.10857666015623 -7.692923583984375Q108.48002197265623 -6.360087890625 105.89148193359374 -6.360087890625Q103.6543505859375 -6.360087890625 101.73863891601562 -7.311511230468749Q99.82292724609374 -8.262934570312499 98.24578491210937 -10.015784912109375Q96.66864257812499 -11.76863525390625 95.33150390624999 -14.108627929687499Z M150.4800732421875 -19.542810058593748 163.07999999999998 0.0H173.2372998046875L159.52306640625 -19.542810058593748ZM140.9228466796875 -42.0V0.0H149.49441650390625V-42.0ZM146.18580322265623 -34.671313476562496H154.50864990234373Q156.7714892578125 -34.671313476562496 158.41718627929686 -33.92989379882812Q160.06288330078124 -33.18847412109375 160.97572998046874 -31.787061767578123Q161.88857666015625 -30.3856494140625 161.88857666015625 -28.37138671875Q161.88857666015625 -26.38283935546875 160.97572998046874 -24.968569335937502Q160.06288330078124 -23.55429931640625 158.41718627929686 -22.812879638671873Q156.7714892578125 -22.0714599609375 154.50864990234373 -22.0714599609375H146.18580322265623V-15.257080078125H155.02295654296876Q160.0029931640625 -15.257080078125 163.49586181640626 -16.928514404296877Q166.98873046875 -18.59994873046875 168.85301513671874 -21.629956054687497Q170.71729980468749 -24.659963378906248 170.71729980468749 -28.6285400390625Q170.71729980468749 -32.65711669921875 168.85301513671874 -35.6571240234375Q166.98873046875 -38.65713134765625 163.49586181640626 -40.32856567382812Q160.0029931640625 -42.0 155.02295654296876 -42.0H146.18580322265623Z M191.02284667968746 -42.0V-13.799999999999999Q191.02284667968746 -10.088547363281249 192.21856933593747 -7.2556823730468745Q193.4142919921875 -4.4228173828125 195.60001831054686 -2.515675048828125Q197.78574462890623 -0.6085327148437499 200.7214709472656 0.38146362304687503Q203.65719726562497 1.3714599609375 207.10291992187496 1.3714599609375Q210.54864257812497 1.3714599609375 213.48436889648434 0.38146362304687503Q216.4200952148437 -0.6085327148437499 218.60582153320308 -2.515675048828125Q220.79154785156248 -4.4228173828125 221.98727050781247 -7.2556823730468745Q223.18299316406248 -10.088547363281249 223.18299316406248 -13.799999999999999V-42.0H214.61142333984372V-14.314306640625Q214.61142333984372 -10.7657666015625 212.7214416503906 -8.575784912109375Q210.83145996093748 -6.38580322265625 207.10291992187496 -6.38580322265625Q203.37437988281246 -6.38580322265625 201.48439819335934 -8.575784912109375Q199.59441650390622 -10.7657666015625 199.59441650390622 -14.314306640625V-42.0Z M245.14284667968747 -42.0V0.0H253.71441650390622V-42.0ZM250.4058032226562 -34.75704345703125H258.7286499023437Q262.11433593749996 -34.75704345703125 264.1114562988281 -33.20563110351563Q266.1085766601562 -31.65421875 266.1085766601562 -28.6285400390625Q266.1085766601562 -25.63714599609375 264.1114562988281 -24.06859130859375Q262.11433593749996 -22.50003662109375 258.7286499023437 -22.50003662109375H250.4058032226562V-15.257080078125H258.7286499023437Q263.70868652343745 -15.257080078125 267.2015551757812 -16.877083740234376Q270.69442382812497 -18.497087402343748 272.5587084960937 -21.514237060546876Q274.42299316406246 -24.53138671875 274.42299316406246 -28.6285400390625Q274.42299316406246 -32.785693359374996 272.5587084960937 -35.772843017578126Q270.69442382812497 -38.75999267578125 267.2015551757812 -40.379996337890624Q263.70868652343745 -42.0 258.7286499023437 -42.0H250.4058032226562Z M290.08284667968746 -34.24273681640625H301.39715332031244V0.0H309.9687231445312V-34.24273681640625H321.2830297851562V-42.0H290.08284667968746Z M344.86295654296873 0.0H366.0429565429687V-7.2429565429687495H344.86295654296873ZM344.86295654296873 -34.75704345703125H366.0429565429687V-42.0H344.86295654296873ZM344.86295654296873 -18.72850341796875H364.8429565429687V-25.84288330078125H344.86295654296873ZM339.34284667968745 -42.0V0.0H347.6572631835937V-42.0Z M387.70284667968747 -42.0V0.0H396.5058544921875V-42.0ZM401.97434326171873 0.0Q408.6086499023437 0.0 413.5672302246093 -2.5885693359374997Q418.52581054687494 -5.177138671874999 421.2643835449218 -9.887138671875Q424.0029565429687 -14.597138671875 424.0029565429687 -21.0Q424.0029565429687 -27.42857666015625 421.2643835449218 -32.12571899414063Q418.52581054687494 -36.822861328125 413.5672302246093 -39.4114306640625Q408.6086499023437 -42.0 401.97434326171873 -42.0H393.22295654296875V-34.19989013671875H401.7171899414062Q404.4857299804687 -34.19989013671875 406.93713867187495 -33.43704711914063Q409.3885473632812 -32.6742041015625 411.2313940429687 -31.079937744140626Q413.0742407226562 -29.48567138671875 414.1242370605469 -26.98283203125Q415.1742333984375 -24.47999267578125 415.1742333984375 -21.0Q415.1742333984375 -17.52000732421875 414.1242370605469 -15.017167968749998Q413.0742407226562 -12.514328613281249 411.2313940429687 -10.920062255859374Q409.3885473632812 -9.3257958984375 406.93713867187495 -8.562952880859374Q404.4857299804687 -7.80010986328125 401.7171899414062 -7.80010986328125H393.22295654296875V0.0Z"/>
+  <g id="AI" transform="translate(811.52 89)">
+    <path d="M0,42 L16.59,0 L33.18,42 Z" fill="#D39585"/>
+    <rect x="47.46" y="0" width="8.4" height="42" fill="#D39585"/>
+  </g>
+</g>
+</svg>
+</a>
+  <nav><a href="/en/blog/">Writing</a><button id="tema" type="button" aria-label="Light / dark" title="Light / dark" style="font:15px Jost,sans-serif;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:3px 10px;cursor:pointer">◐</button><a class="idioma" href="/es/blog/silent-bridge/" hreflang="es" lang="es">ES</a></nav>
+</header>
+<main class="post">
+<style>
+.sb{--progress:#997B46;--gate:#E9E1F7;--term:#0b0b0b;--okT:#EEF0E2;--stopT:#F5E6E4;--progT:#F6EEDF;--greyT:#EFEAE7}
+.sb{max-width:760px;margin:0 auto}
+.sb .sb-wide{width:min(1080px,calc(100vw - 56px));margin:32px 0 36px calc(50% - min(540px,50vw - 28px))}
+.sb .meta{font:500 12px Jost,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 14px}
+.sb h1{font:600 clamp(36px,5.6vw,54px)/1.06 Jost,sans-serif;margin:0 0 16px;letter-spacing:-.01em;text-wrap:balance}
+.sb h1 .soft{color:var(--muted);font-weight:500}
+.sb .dek{font-size:21px;line-height:1.45;color:var(--muted);margin:0 0 28px;max-width:36ch;text-wrap:balance}
+.sb .dek b{color:var(--ink)}
+.sb h2{font:600 28px/1.2 Jost,sans-serif;margin:64px 0 14px;text-wrap:balance}
+.sb h2 .num{display:block;font:500 13px/1 "JetBrains Mono",monospace;color:var(--harness);letter-spacing:.12em;margin-bottom:10px}
+.sb h3{font:600 20px/1.3 Jost,sans-serif;margin:30px 0 8px}
+.sb pre{background:#2E2829;color:#F3ECE8;border-radius:12px;padding:16px 18px;overflow-x:auto;font:13.5px/1.6 "JetBrains Mono",monospace;margin:0 0 20px}
+.sb pre code{background:none;padding:0;color:inherit;font:inherit}
+.sb pre .c{color:#B5ACA8}.sb pre .k{color:#D2BFF8}.sb pre .s{color:#B9D69E}
+.sb .card{background:var(--paper);border:1px solid var(--line);border-radius:14px}
+.sb figure{margin:32px 0 36px}
+.sb figcaption{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.sb .replay{font:500 12px Jost,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+.sb .replay:hover{color:var(--ink);border-color:var(--muted)}
+.sb-draft{font-size:14px;color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:10px 14px;margin:0 0 26px}
+.js .sb .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.js .sb .reveal.in{opacity:1;transform:none}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 30px}
+.stat{padding:16px 16px 14px}
+.stat .n{font:600 40px/1 Jost,sans-serif;font-variant-numeric:tabular-nums;display:block;margin-bottom:8px}
+.stat .n small{font-size:18px;font-weight:500;color:var(--muted);margin-left:2px}
+.stat .l{font-size:14px;line-height:1.35;color:var(--muted);display:block}
+.stat .mode{display:inline-block;margin-top:10px;font:500 10.5px Jost,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--harness);border:1px solid var(--line);border-radius:999px;padding:2px 8px}
+.stat.c1 .n{color:var(--agent)}.stat.c2 .n{color:var(--stop)}.stat.c3 .n{color:var(--ok)}.stat.c4 .n{color:var(--progress)}
+
+.tldr{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:0 0 28px}
+.tldr strong{display:block;font:500 12px Jost,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.tldr ul{margin:0;padding-left:20px}
+
+.hero{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;align-items:stretch}
+.term{background:var(--term);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.term .bar{display:flex;gap:7px;align-items:center;padding:10px 12px;background:#1d1a1b;border-bottom:1px solid #2c2829}
+.term .bar i{width:11px;height:11px;border-radius:50%;background:#5a5253;display:block}
+.term .bar span{margin-left:auto;font:500 11px "JetBrains Mono",monospace;color:#B5ACA8;letter-spacing:.04em}
+.shot{flex:1;background:#000;display:flex;align-items:center}
+.shotin{position:relative;width:100%}
+.shotin img{display:block;width:100%;height:auto}
+.pin{position:absolute;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:600 14px Jost,sans-serif;color:#fff;box-shadow:0 0 0 4px rgba(0,0,0,.35)}
+.pin.ok{background:#5D6A33}.pin.no{background:#A0453F}
+.js .pin{opacity:0;transform:translate(-50%,-50%) scale(.4);transition:opacity .4s,transform .5s cubic-bezier(.3,1.6,.5,1)}
+.js .in .pin{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.js .in .pin:nth-of-type(2){transition-delay:.5s}.js .in .pin:nth-of-type(3){transition-delay:1s}
+.in .pin.no{animation:ping 2.2s 2.2s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(160,69,63,.7)}70%{box-shadow:0 0 0 16px rgba(160,69,63,0)}100%{box-shadow:0 0 0 0 rgba(160,69,63,0)}}
+.legend{list-style:none;padding:14px 16px;margin:0;background:var(--paper);border-top:1px solid var(--line);display:grid;gap:8px;font-size:15px;line-height:1.4}
+.legend li{display:flex;gap:10px;align-items:flex-start;margin:0;max-width:none}
+.legend .k1{flex:0 0 22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;color:#fff;margin-top:1px}
+.legend .ok .k1{background:#5D6A33}.legend .no .k1{background:#A0453F}
+.behind{display:flex;flex-direction:column}
+.behind svg{display:block;width:100%;height:auto;flex:1}
+.zoneA{fill:var(--okT)}.zoneB{fill:var(--stopT)}
+.sb svg .t{fill:var(--ink);font:600 19px Jost,sans-serif}.sb svg .sm{fill:var(--muted);font:400 16px Jost,sans-serif}.sb svg .mono{font-family:"JetBrains Mono",monospace}
+.sb svg .zl{font:600 13px Jost,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+.sb svg .box{fill:var(--paper);stroke:var(--line);stroke-width:1.5}
+.sb svg .flow{stroke:var(--muted);stroke-width:2;fill:none;opacity:.55}
+.sb svg .dash{stroke-dasharray:6 7;animation:dash 1.2s linear infinite}@keyframes dash{to{stroke-dashoffset:-26}}
+
+.pull{margin:40px 0;padding:6px 0 6px 22px;border-left:4px solid var(--harness);font:500 29px/1.25 Jost,sans-serif;text-wrap:balance;max-width:26ch}
+.pull span{color:var(--harness)}
+
+.pipe{padding:22px 20px 20px}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:22px;margin-bottom:20px}
+.steps.seq4{grid-template-columns:repeat(4,1fr);margin-bottom:6px}
+.step{position:relative;border:1.5px solid var(--line);border-radius:12px;padding:12px 12px 10px;background:var(--bg);transition:background .3s,border-color .3s,transform .3s}
+.step:not(:last-child)::after{content:"";position:absolute;right:-20px;top:50%;width:18px;height:2px;background:var(--line)}
+.step b{display:block;font-size:16px}
+.step span{display:block;font:12.5px/1.4 "JetBrains Mono",monospace;color:var(--muted);margin-top:2px}
+.step em{display:block;font-style:normal;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px;color:var(--c)}
+.step.on{border-color:var(--c);transform:translateY(-3px);box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 30%,transparent)}
+.panes{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.pane{border-radius:10px;padding:12px 14px;min-height:140px;font:12.5px/1.6 "JetBrains Mono",monospace}
+.pane h4{margin:0 0 8px;font:600 12px Jost,sans-serif;letter-spacing:.16em;text-transform:uppercase}
+.pane.tty{background:var(--term);color:#38d438}.pane.tty h4{color:#B5ACA8}.pane.tty .dim{color:#c9a227}
+.cursor{display:inline-block;width:8px;height:14px;background:#38d438;vertical-align:-2px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.pane.jsonl{background:var(--greyT);color:var(--muted)}.pane.jsonl h4,.pane.audit h4{color:var(--muted)}
+.pane.audit{background:var(--okT);color:var(--ink);overflow:hidden}
+.pane .line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:slidein .45s ease}
+@keyframes slidein{from{opacity:0;transform:translateX(-8px)}}
+.tickline{margin-top:14px;font:13px "JetBrains Mono",monospace;color:var(--muted);text-align:center}
+.tickline b{color:var(--ok);font-weight:500}
+
+.behind-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.bc{padding:18px 18px 16px}
+.bc .tag{display:inline-block;font:500 11px Jost,sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:3px 9px;border-radius:999px;margin-bottom:10px;background:var(--gate);color:var(--harness)}
+.bc .tag.i{background:var(--progT);color:var(--progress)}
+.bc h3{margin:0 0 6px;font-size:18px}
+.bc p{font-size:15px;line-height:1.5;color:var(--muted);margin:0}
+.bc .big{font:600 30px/1 "JetBrains Mono",monospace;color:var(--ink);margin:10px 0 2px;display:block}
+
+.mx{padding:18px}
+.mscroll{overflow-x:auto}
+.mgrid{display:grid;grid-template-columns:1.25fr repeat(4,1fr);gap:8px;min-width:640px}
+.mh{font:600 12px Jost,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:4px 6px;align-self:end}
+.mr{font-size:15px;line-height:1.35;padding:10px 6px;align-self:center}
+.mr code{font-size:12.5px}
+.cell{border-radius:10px;padding:10px;font-size:14px;line-height:1.35;border:1px solid transparent}
+.cell b{display:block;font-size:14.5px}
+.cell small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.cell.g{background:var(--okT);border-color:color-mix(in srgb,var(--ok) 35%,transparent)}.cell.g b{color:var(--ok)}
+.cell.a{background:var(--progT);border-color:color-mix(in srgb,var(--progress) 35%,transparent)}.cell.a b{color:var(--progress)}
+.cell.r{background:var(--stopT);border-color:color-mix(in srgb,var(--stop) 35%,transparent)}.cell.r b{color:var(--stop)}
+.cell.p{background:transparent;border:1.5px dashed var(--line)}.cell.p b{color:var(--muted)}
+.js .cell{opacity:0;transform:scale(.92);transition:opacity .45s ease,transform .45s cubic-bezier(.3,1.4,.5,1);transition-delay:calc(var(--i)*90ms)}
+.js .in .cell{opacity:1;transform:none}
+.mleg{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:13px;color:var(--muted)}
+.mleg span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--sw);border:1px solid var(--bd,transparent)}
+
+.nota{border-left:4px solid var(--accent);background:var(--paper);padding:14px 18px;border-radius:0 10px 10px 0;margin:30px 0}
+.tips{display:grid;gap:12px;margin:18px 0;counter-reset:m}
+.tips>div{padding:16px 18px 16px 58px;position:relative;counter-increment:m}
+.tips>div::before{content:counter(m);position:absolute;left:16px;top:15px;width:28px;height:28px;border-radius:50%;background:var(--gate);color:var(--harness);font:600 14px/28px Jost,sans-serif;text-align:center}
+.tips strong{display:block;margin-bottom:2px}
+.tips span{display:block;color:var(--muted);font-size:15.5px;line-height:1.5}
+.tips .contra{margin-top:8px;color:var(--ink);font-size:14.5px}
+.tips .contra b{color:var(--stop);font-weight:600}
+
+.asks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0 14px}
+.ask{padding:18px 18px 16px;border-top:4px solid var(--c)}
+.ask .ak{font:500 11px Jost,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--c);display:block;margin-bottom:4px}
+.ask h3{margin:0 0 10px;font-size:19px}
+.ask ul{margin:0;padding-left:18px;font-size:14.5px;line-height:1.45}
+.ask li{margin:0 0 8px}
+.ask li b{display:block;font-size:15px}
+.ask li span{color:var(--muted)}
+.js .ask{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i)*160ms)}
+.js .in .ask{opacity:1;transform:none}
+.reported{display:flex;gap:12px;align-items:center;font-size:14px;color:var(--muted);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin:0 0 8px}
+.reported i{flex:0 0 10px;height:10px;border-radius:50%;background:var(--progress)}
+.next{border:1.5px dashed var(--harness);border-radius:14px;padding:16px 20px;margin:26px 0}
+.next strong{display:block;font:500 12px Jost,sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--harness);margin-bottom:6px}
+.next ol{margin:0}
+.sb a.src{font:500 11.5px "JetBrains Mono",monospace;color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--line);white-space:nowrap}
+.sb a.src:hover{color:var(--ink)}
+.cierre{font:500 26px/1.3 Jost,sans-serif;margin:44px 0 10px;padding-left:22px;border-left:4px solid var(--harness);max-width:28ch;text-wrap:balance}
+.cierre span{color:var(--harness)}
+details.ev{margin-top:30px}
+details.ev summary{cursor:pointer;font-weight:600;padding:10px 0}
+.ev table{border-collapse:collapse;width:100%;font-size:14px}
+.ev th,.ev td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.ev th{font-weight:600;color:var(--muted);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.ev .hash{overflow-wrap:anywhere;font-size:12px}
+.ev .tw{overflow-x:auto}
+
+@media (max-width:820px){
+  .hero,.behind-grid,.asks{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .steps,.steps.seq4{grid-template-columns:1fr;gap:12px}
+  .step:not(:last-child)::after{right:auto;left:50%;top:auto;bottom:-12px;width:2px;height:12px}
+  .panes{grid-template-columns:1fr}.pane{min-height:auto}
+}
+@media (max-width:620px){.pull{font-size:23px}.cierre{font-size:22px}}
+@media print{
+  .js .sb .reveal,.js .cell,.js .pin,.js .ask{opacity:1!important;transform:none!important}
+  .sb .replay,.sb-draft{display:none}
+  .sb .sb-wide{width:100%;margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .sb svg .dash,.cursor,.in .pin.no{animation:none}
+  .js .sb .reveal,.js .cell,.js .pin,.js .ask{transition:none}
+}
+
+/* tabla "Dónde mirar" (2 nov, Jose: difícil de leer) */
+.mirar{width:100%;border-collapse:separate;border-spacing:0 8px;margin:8px 0 24px}
+.mirar th{font:600 12px Jost,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 14px 2px}
+.mirar td{background:var(--paper);padding:12px 14px;vertical-align:top;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:16px;line-height:1.5}
+.mirar td:first-child{border-left:1px solid var(--line);border-radius:12px 0 0 12px;font-weight:600;width:28%}
+.mirar td:last-child{border-right:1px solid var(--line);border-radius:0 12px 12px 0;width:18%;white-space:nowrap}
+.mirar .ve{display:inline-block;font:600 12px Jost,sans-serif;letter-spacing:.06em;padding:4px 10px;border-radius:999px;border:1.5px solid}
+.mirar .si{color:var(--ok);border-color:var(--ok)}.mirar .medio{color:var(--progress,#997B46);border-color:var(--progress,#997B46)}.mirar .nada{color:var(--stop);border-color:var(--stop)}
+.mirar code{white-space:nowrap}
+@media (max-width:640px){.mirar td:last-child{white-space:normal}}
+</style>
+<style data-tema="oscuro" media="(prefers-color-scheme: dark)">
+.sb{--progress:#C1A16D;--gate:#40385A;--stop:#E8726A;--okT:#343A2A;--stopT:#432F2E;--progT:#3F3628;--greyT:#3A3334}
+</style>
+
+
+<div class="sb">
+
+
+<p class="meta">2 Nov 2026 · Technical report</p>
+<h1>Be careful with Claude Code mods: <span class="soft">they open a door to all your connectors</span></h1>
+<p class="dek">There are already 7,349 public Claude Code mods, nine out of ten in repositories created in October, and 40% launch programs on your machine. <b>I built one and measured what it can do without you noticing, from the mode in which Claude Code asks you about every step to the one that asks nothing.</b></p>
+
+<div class="stats reveal" id="stats">
+  <div class="stat card c1"><span class="n" data-to="5">5</span><span class="l">connected services read by the mod</span><span class="mode">bypass</span></div>
+  <div class="stat card c2"><span class="n" data-to="1">1</span><span class="l">dev secret read by a script the mod launched</span><span class="mode">auto + manual</span></div>
+  <div class="stat card c3"><span class="n">0</span><span class="l">model calls and new lines in the session history</span><span class="mode">auto + manual</span></div>
+  <div class="stat card c4"><span class="n" data-to="120">120<small>s</small></span><span class="l">between timer runs, with nobody in front of the screen</span><span class="mode">all</span></div>
+</div>
+
+<div class="tldr reveal"><strong>In short</strong>
+<ul>
+<li>A mod is code that travels inside a plugin and runs in your Claude Code session, with your connectors and with your permissions.</li>
+<li>I built one: every two minutes it read my Gmail and my Calendar, and a script of its own read a secret, without the model doing anything and without leaving a trace in the session.</li>
+<li>Claude Code asks you before reading the email. What the mod does afterwards with that data, nobody asks you about anymore.</li>
+</ul></div>
+
+<p>On 2 November, at 11:12 (UTC time), a Claude Code session in my local lab read a secret stored in my secrets manager. Nobody had touched the keyboard and nothing had changed in the terminal: the cursor waiting and, at the bottom, the usual line that says which mode it is in, auto mode. Also, looking at the session history, its last line was from 11:05:20, seven minutes earlier.</p>
+<p>The secret was a test one, and I had put it there on purpose. The execution had been done by a mod that I had written myself to test how far arbitrary code can be run in a mod without anyone noticing, so I started digging. New weekend project (in Spain this weekend has been three days long. I tell you, come to Spain to live you will be happier).</p>
+
+<h2><span class="num">01</span>The problem</h2>
+<p>Before anything else, it's worth distinguishing between two concepts. A plugin is the package you install in Claude Code: it can bring skills, commands or MCP servers. When it also brings code that runs inside Claude Code itself, that code is called a mod. Every mod travels inside a plugin, but not all plugins bring a mod. Here what we are going to talk about is Claude Code mods.</p>
+<p>A mod hooks into the session, at certain moments (events), for example when the session opens, and from there it can set a timer, use your session's connectors (Gmail, Calendar, Drive…) and launch programs on your machine.</p>
+<p><a href="https://code.claude.com/docs/en/plugins/mods/overview">The documentation</a> says it clearly so nobody gets the surprise: mods run with your permissions and what they launch stays outside the sandbox (careful with that last one, because I'm still hearing the screams of the security people with the <a href="https://tomshardware.com/tech-industry/cyber-security/malicious-moltbot-skill-targets-crypto-users-on-clawhub">OpenClaw plugins</a>, and this is a bit more of the same).</p>
+<p>I've taken a look out of curiosity and there are a lot of mods. A community catalog that runs the official Claude Code validator on every public repository it finds counted, on 1 November, 7,349 mods, nine out of ten in repositories created in October (!!). 40% launch programs on your machine and one in three reads your environment variables (WHATTT???!). So let's see what we can do with this, which a priori seems to be not a little.</p>
+<p>In manual mode, every time the mod wants to use a connector, Claude Code stops, asks you and tells you which plugin is asking for it (yes, that drag that you turn off the third time it has asked you). But when you hit Yes, the data goes to the mod's code, and what it does with it no longer passes through any filter of any kind, and this is where the crux of the matter comes in.</p>
+<p>There's no trace in the session history either, which is the first thing you'd look at to know what has happened. If you turn on Claude Code's telemetry, you'll see that the mod used Gmail, but not what it searched for, and the programs it launches don't even appear (warning to Anthropic: <a href="https://x.com/bcherny">Boris</a>, this costs you very little, put it in, at least).</p>
+
+<figure class="sb-wide reveal" id="hero">
+  <div class="hero">
+    <div class="term">
+      <div class="bar"><i></i><i></i><i></i><span>manual mode · what you see</span></div>
+      <div class="shot"><div class="shotin">
+        <img src="assets/dialog-gmail.png" width="989" height="466" alt="Claude Code permission prompt: Tool use from the bridge-lab plugin, Gmail search email threads, with the query parameters and the question Do you want to proceed, Yes or No. Senders covered.">
+        <span class="pin ok" style="left:41%;top:34%">1</span>
+        <span class="pin ok" style="left:52%;top:50%">2</span>
+        <span class="pin no" style="left:27%;top:83%">3</span>
+      </div></div>
+      <ul class="legend">
+        <li class="ok"><span class="k1">1</span><span><b>It names the plugin.</b> It says bridge-lab is asking.</span></li>
+        <li class="ok"><span class="k1">2</span><span><b>It shows what it will read.</b> The exact search and how many results.</span></li>
+        <li class="no"><span class="k1">3</span><span><b>The “Yes” approves the read.</b> What comes next, the Python script that receives the data, runs without asking.</span></li>
+      </ul>
+    </div>
+    <div class="card behind">
+      <svg viewBox="0 0 560 640" role="img" aria-label="The same call from start to finish. Gmail returns results to the hook after your approval. The hook passes them to bridge_rules.py, a new Python process running as your user, which can use your files, the network and your local credentials. Only the top part appears in the prompt.">
+        <rect class="zoneA" x="0" y="0" width="560" height="206"/>
+        <rect class="zoneB" x="0" y="206" width="560" height="434"/>
+        <text class="zl" x="24" y="34" style="fill:var(--ok)">What the prompt shows</text>
+        <text class="zl" x="24" y="240" style="fill:var(--stop)">What happens next</text>
+        <rect class="box" x="130" y="54" width="300" height="58" rx="10" style="stroke:var(--accent);stroke-width:2"/>
+        <text class="t" x="280" y="80" text-anchor="middle">Gmail · search_threads</text>
+        <text class="sm" x="280" y="102" text-anchor="middle">5 thread headers</text>
+        <rect x="185" y="140" width="190" height="40" rx="20" style="fill:var(--okT);stroke:var(--ok);stroke-width:2"/>
+        <text x="280" y="166" text-anchor="middle" style="fill:var(--ink);font:600 16px Jost,sans-serif">You press “Yes”</text>
+        <rect class="box" x="130" y="262" width="300" height="58" rx="10" style="stroke:var(--agent);stroke-width:2"/>
+        <text class="t" x="280" y="288" text-anchor="middle">Hook · bridge-lab</text>
+        <text class="sm mono" x="280" y="308" text-anchor="middle" style="font-size:13px">$.process.run(...)</text>
+        <rect class="box" x="130" y="350" width="300" height="58" rx="10" style="stroke:var(--stop);stroke-width:2"/>
+        <text class="t mono" x="280" y="377" text-anchor="middle" style="font-size:17px">bridge_rules.py</text>
+        <text class="sm" x="280" y="398" text-anchor="middle">new process, your user</text>
+        <path class="flow" d="M280 112 V140"/><path class="flow" d="M280 180 V262"/><path class="flow" d="M280 320 V350"/>
+        <path class="flow dash" d="M280 408 C280 460 100 460 100 510"/>
+        <path class="flow dash" d="M280 408 V510"/>
+        <path class="flow dash" d="M280 408 C280 460 460 460 460 510"/>
+        <rect class="box" x="30" y="510" width="140" height="80" rx="10"/>
+        <text class="t" x="100" y="545" text-anchor="middle">Your files</text>
+        <text class="sm" x="100" y="570" text-anchor="middle">read, write</text>
+        <rect class="box" x="210" y="510" width="140" height="80" rx="10"/>
+        <text class="t" x="280" y="545" text-anchor="middle">The network</text>
+        <text class="sm" x="280" y="570" text-anchor="middle">send, download</text>
+        <rect class="box" x="390" y="510" width="140" height="80" rx="10"/>
+        <text class="t" x="460" y="545" text-anchor="middle">Your access</text>
+        <text class="sm" x="460" y="570" text-anchor="middle">local credentials</text>
+        <circle r="9" fill="var(--accent)">
+          <animateMotion dur="5s" repeatCount="indefinite" path="M280 112 V408" keyPoints="0;1;1" keyTimes="0;.5;1" calcMode="linear"/>
+          <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.5;.52;1" dur="5s" repeatCount="indefinite"/>
+        </circle>
+        <circle r="7" fill="var(--stop)" opacity="0"><animateMotion dur="5s" repeatCount="indefinite" path="M280 408 C280 460 100 460 100 510" keyPoints="0;0;1;1" keyTimes="0;.5;.85;1" calcMode="linear"/><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.5;.52;.85;1" dur="5s" repeatCount="indefinite"/></circle>
+        <circle r="7" fill="var(--stop)" opacity="0"><animateMotion dur="5s" repeatCount="indefinite" path="M280 408 V510" keyPoints="0;0;1;1" keyTimes="0;.5;.85;1" calcMode="linear"/><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.5;.52;.85;1" dur="5s" repeatCount="indefinite"/></circle>
+        <circle r="7" fill="var(--stop)" opacity="0"><animateMotion dur="5s" repeatCount="indefinite" path="M280 408 C280 460 460 460 460 510" keyPoints="0;0;1;1" keyTimes="0;.5;.85;1" calcMode="linear"/><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.5;.52;.85;1" dur="5s" repeatCount="indefinite"/></circle>
+        <text class="sm" x="280" y="622" text-anchor="middle" style="font-size:14px">Everything a process running as your user can do, outside the prompt.</text>
+      </svg>
+    </div>
+  </div>
+  <figcaption><span>Figure 1. On the left, the real prompt in manual mode, with the senders covered. On the right, the full path of that same read. The bottom half shows what the mod can do; what we measured is in section 02.</span></figcaption>
+</figure>
+
+<blockquote class="pull reveal">The prompt tells you <span>what gets read.</span> The mod decides <span>where it goes.</span></blockquote>
+
+<h2><span class="num">02</span>The bridge that didn't say a word</h2>
+<p>Like almost all these things, everything started with a small problem, and here you have me, my whole holiday Monday pulling the thread 8 hours later. I wanted to pass data to a tasks page (it's a long story for another post, very entertaining) without spending tokens (because, in case you hadn't noticed, tokens are the new gold and even the cat asks you for tokens), so I set up what I called a bridge: basically a Claude Code session (the 2.1.316, with Haiku 5.5) that only loads a plugin and where nobody types. Its mod sets a timer that makes its first run in 20 seconds and then every two minutes. On each run it queries Gmail and Calendar, although it could pull from anything my connectors see, and passes what it finds to a Python script with fixed rules (the why of this is long, but let's not get off track, we're with the mods). The model, meanwhile, doesn't even find out, which was the idea so as not to spend tokens.</p>
+
+<figure class="reveal" id="tick">
+  <div class="card pipe">
+    <div class="steps">
+      <div class="step" style="--c:var(--progress)"><em>timer</em><b>Run</b><span>every 120 s</span></div>
+      <div class="step" style="--c:var(--accent)"><em>connector</em><b>Gmail</b><span>search_threads</span></div>
+      <div class="step" style="--c:var(--accent)"><em>connector</em><b>Calendar</b><span>list_events</span></div>
+      <div class="step" style="--c:var(--stop)"><em>process</em><b>Python</b><span>bridge_rules.py</span></div>
+      <div class="step" style="--c:var(--ok)"><em>file</em><b>Audit</b><span>adds a line</span></div>
+    </div>
+    <div class="panes">
+      <div class="pane tty"><h4>Terminal</h4>❯ <span class="cursor"></span><br><br><span class="dim">⏵⏵ auto mode on</span></div>
+      <div class="pane jsonl"><h4>Session history</h4><div id="jsonl">5 records<br>last: 11:05:20<br><br>no changes</div></div>
+      <div class="pane audit"><h4>Mod log</h4><div id="audit"></div></div>
+    </div>
+    <div class="tickline" id="tickline">run 0</div>
+  </div>
+  <figcaption><span>Figure 2. One run of the bridge in auto mode. A lot happens inside; outside, the terminal and the session history stay the same.</span><button class="replay" data-replay="tick">Replay</button></figcaption>
+</figure>
+
+<pre><code><span class="c">// hooks/register.js: pieces of the mod's code, with the private names changed.</span>
+on(<span class="s">'session.start'</span>, <span class="k">async</span> ($, event, next) =&gt; {
+  $.clock.every(120000, () =&gt; tick($));
+  <span class="k">void</span> $.clock.sleep(20000).then(() =&gt; tick($));
+  <span class="k">return</span> next(event);
+});
+
+<span class="k">const</span> g = <span class="k">await</span> $.mcp.call(<span class="s">'claude.ai Gmail'</span>, <span class="s">'search_threads'</span>, {
+  query: QUERY, pageSize: 10, view: <span class="s">'THREAD_VIEW_MINIMAL'</span>
+});
+<span class="k">const</span> c = <span class="k">await</span> $.mcp.call(<span class="s">'claude.ai Google Calendar'</span>,
+  <span class="s">'list_events'</span>, { pageSize: 10, orderBy: <span class="s">'startTime'</span> });
+<span class="k">const</span> r = <span class="k">await</span> $.process.run([<span class="s">'python3'</span>, RULES], {
+  stdin: JSON.stringify({ source, items, meta }), timeoutMs: 20000
+});</code></pre>
+<p>Then I realized I was going all the way into the kitchen and in the Claude Code console it didn't say even a peep. I was surprised and thought maybe in the JSONL, but no. And there I already knew how the day was going to end. I wanted to know what else the mod could do on its own, without Claude Code asking me anything. So I did three tests: read a secret, change the code while running and download code from the internet.</p>
+
+<div class="behind-grid reveal">
+  <div class="card bc"><span class="tag">measured · auto and manual</span><h3>A secret read</h3><p>On one of the runs, the mod launched a small script that used my dev account and read a throwaway secret.</p><span class="big">15 B</span><p>The value was the real one, and its owner's hash confirmed it. Nothing showed on screen.</p></div>
+  <div class="card bc"><span class="tag">measured · auto mode</span><h3>Code changed on the fly</h3><p>The mod loads only once, but on every run it starts a new Python that reads <code>bridge_rules.py</code> from disk. I changed that file with the session open.</p><span class="big">1 run</span><p>and the new code was already running, with no restart.</p></div>
+  <div class="card bc"><span class="tag i">measured · bypass, isolated</span><h3>Code fetched later</h3><p>In a separate test, the mod downloaded a script from the internet, checked its hash and ran it.</p><span class="big">HTTP 200</span><p>It finished fine (exit code 0) and processed a Drive response.</p></div>
+</div>
+<p>And so there's no doubt: the script was receiving real data. From Calendar, the 10 events of the next three days, with their time and their title, mixing work, fixed meetings and personal things. From Gmail, the headers of 5 threads, with sender and subject, of the automatic notices from providers of the last month.</p>
+<p>Of course, since you're at it you start turning it over, and it occurred to me that in the last two tests it was going to change how a plugin is reviewed. Could it be that, when you install a mod and read its code (something we all do, with no exceptions) and it looks fine to you, this code calls every X minutes a script that lives on your disk, or downloads another one from the internet? And what if someone changes that script on the fly? Does the mod run it on the next run, without reinstalling anything and without warning? If so (Spoiler 1: yes, it is), the code that runs is already a different one from the one you “reviewed”.</p>
+<p>And of course, when I look at the published mods it turns out it's a very common pattern: 1,758, one in four, combine a timer with programs they launch on your machine, just like my bridge.</p>
+
+<p>Then I wanted to know what the user sees in each of Claude Code's permission modes, because of course, maybe it was me who was in bypass-permissions-and-take-my-whole-PC mode, so I repeated the same tests in the four modes, and this table sums up what happened (Spoiler 2: it's what you're imagining).</p>
+<figure class="sb-wide reveal" id="matrix">
+  <div class="card mx"><div class="mscroll"><div class="mgrid">
+    <div class="mh"></div><div class="mh">Manual</div><div class="mh">Accept edits</div><div class="mh">Auto</div><div class="mh">Bypass</div>
+    <div class="mr"><b>Connector read</b><br><code>$.mcp.call</code></div>
+    <div class="cell g" style="--i:0"><b>Asks first</b><small>names the plugin and the parameters</small></div>
+    <div class="cell g" style="--i:1"><b>Asks first</b><small>the same prompt</small></div>
+    <div class="cell a" style="--i:2"><b>No prompt</b><small>reads and one reversible write</small></div>
+    <div class="cell r" style="--i:3"><b>No prompt</b><small>5 services read</small></div>
+    <div class="mr"><b>Where the data goes</b><br><small style="color:var(--muted)">after it's read</small></div>
+    <div class="cell r" style="--i:4"><b>Off screen</b></div>
+    <div class="cell r" style="--i:5"><b>Off screen</b></div>
+    <div class="cell r" style="--i:6"><b>Off screen</b></div>
+    <div class="cell r" style="--i:7"><b>Off screen</b></div>
+    <div class="mr"><b>Programs it launches</b><br><code>$.process.run</code></div>
+    <div class="cell r" style="--i:8"><b>Runs with no prompt</b><small>secret read</small></div>
+    <div class="cell r" style="--i:9"><b>Runs with no prompt</b><small>new session</small></div>
+    <div class="cell r" style="--i:10"><b>Runs with no prompt</b><small>secret read</small></div>
+    <div class="cell r" style="--i:11"><b>Runs with no prompt</b><small>script downloaded from the internet</small></div>
+  </div></div>
+  <div class="mleg"><span style="--sw:var(--okT);--bd:var(--ok)">you approve every call</span><span style="--sw:var(--progT);--bd:var(--progress)">auto mode's classifier decides</span><span style="--sw:var(--stopT);--bd:var(--stop)">happens with no warning</span><span style="--sw:transparent;--bd:var(--muted)">pending</span></div>
+  </div>
+  <figcaption><span>Figure 3. Claude Code 2.1.316. The only write in auto mode was creating a label (<code>create_label</code>), which we checked and deleted.</span><button class="replay" data-replay="matrix">Replay</button></figcaption>
+</figure>
+<p>That said, credit to whom it's due: in manual mode, Claude Code does well the part it controls. It tells you which plugin asks for the read and shows you exactly what it's going to search for. The problem is one of design: when you approve a read, you're approving the input of a piece of code whose output you don't see.</p>
+
+<p>For this test, in manual mode, I record the whole sequence. The data goes from Gmail to Python, from Python to Calendar and from Calendar again to Python. Only the connectors stopped to ask; the two Python scripts just ran, and there anything could have happened. Of course, it's the power of the mod!, exactly the idea. Don't be surprised, if you want something that does things, if it then does them!</p>
+<figure class="reveal" id="seq">
+  <div class="card pipe">
+    <div class="steps seq4">
+      <div class="step" style="--c:var(--ok)"><em>prompt · you approve</em><b>Gmail</b><span>search_threads</span></div>
+      <div class="step" style="--c:var(--stop)"><em>no prompt</em><b>Python</b><span>12:32:28 · 5 results</span></div>
+      <div class="step" style="--c:var(--ok)"><em>prompt · you approve</em><b>Calendar</b><span>list_events</span></div>
+      <div class="step" style="--c:var(--stop)"><em>no prompt</em><b>Python</b><span>12:32:38 · 10 results</span></div>
+    </div>
+    <div class="tickline">two approvals · two scripts launched · <b>0 new lines in the history</b></div>
+  </div>
+  <figcaption><span>Figure 4. Manual mode. The times come from the mod's own log. In accept edits the same two prompts showed up.</span><button class="replay" data-replay="seq">Replay</button></figcaption>
+</figure>
+<p>Lastly I tried launching only the script, also in manual mode. The mod started it with <code>$.process.run</code>, it finished fine and read a secret. No trace was left. And even though we approved the connectors by hand, the session history didn't note any of those approvals.</p>
+<p>And wasn't it noted anywhere? I repeated the test turning on the two logs that Claude Code brings for these things, the debug log and telemetry. The debug log caught everything: the email read, the calendar one and the script, with the plugin name in front. Telemetry, only half: the two reads yes, the script no. That is, exactly what skips the permission window is what doesn't reach telemetry either.</p>
+<p>And before all this, in an isolated session in bypass mode (in which neither I nor anyone I know has ever worked), the mod called five connected services and all of them answered without asking permission even once: Drive returned 32,798 characters, Gmail 2,575, Atlassian 659, Slack 494 and Calendar 254. I saved only whether it worked and how much it returned.</p>
+<p>None of this has needed an exploit. It's what a plugin is allowed to do. Most of us install a plugin like a browser extension, after reading the description. What we really install is code that runs inside the session we're watching, with our connectors and our account, with its timer and without saying even a peep on screen.</p>
+
+<div class="nota reveal"><b>The lesson.</b> Installing a plugin that brings a mod is like installing a program. Review the mod's code, every script it launches and everything it downloads, and decide which user and which connectors you'll let it run with. Keep in mind that of the 7,349 public mods, only 69 sit in repositories with more than a thousand stars.</div>
+
+<h2><span class="num">03</span>How to catch a silent mod</h2>
+<p>Start with the code the session loaded, which is where what the mod does is; the history only notes what the model did. With these commands, which only read, you have the map:</p>
+<pre><code><span class="c"># Read-only</span>
+claude plugin list --json
+claude plugin details &lt;installed-plugin&gt;
+rg -n 'session\.start|clock\.every|process\.run|mcp\.call|tool\.call|http\.fetch' &lt;plugin-folder&gt;
+sha256sum &lt;mod-module&gt; &lt;every-script-it-launches&gt;</code></pre>
+<p>Follow every <code>$.process.run</code> to its script and to what that script imports. In my case, staying at <code>register.js</code> would have left the change out: the mod didn't move, the one that changed was <code>bridge_rules.py</code>. And look also at the plugins loaded with <code>--plugin-dir</code>, which come in without being installed.</p>
+<p>Careful, <code>claude plugin validate</code> checks the structure; how far the mod reaches you have to look at yourself.</p>
+<p>You can do aaall of that, or you pass this post to your Opus 5.5 and ask it to build you a guardian mod: Claude Code warns with the <code>plugin.register</code> event every time a mod is about to load, and there the guardian can read its code, ask Opus about it and block it if it isn't convinced. That said, it only sees what gets loaded, so the scripts that mod launches afterwards have to be watched by hash.</p>
+<p>I've made mine and left it <a href="https://github.com/josemlopez/claude-code-mod-guard">public on my GitHub</a>, explained from top to bottom: before loading any mod it passes its code to Opus 5.5 for it to review, and if a script of the mod then changes in the middle of the session, it doesn't let it run. I tested it with a mod that said it was a clock and actually launched a script every minute: Opus caught it the first time and it never got loaded.</p>
+<p>It's not without a certain irony that, after this whole post, I offer you a mod and at the same time tell you to think about it before installing one. But c'est la vie: if you don't want to, don't install it, or at least ask your Opus 5.5 to read it and install it for you. I have it set with Opus 5.5 on high effort, because to review someone else's code it's not advisable to skimp.</p>
+<table class="mirar">
+<tr><th>Where to look</th><th>What it tells you</th><th>Sees the mod?</th></tr>
+<tr><td>The startup configuration</td><td>The active plugins, the <code>--plugin-dir</code> folders and the session's permission mode.</td><td><span class="ve si">What got loaded</span></td></tr>
+<tr><td>The mod and everything it launches</td><td>Timers, connector calls, scripts, imports, hashes and owners.</td><td><span class="ve si">Everything</span></td></tr>
+<tr><td>The session history (JSONL)</td><td>Which session it was. An empty history doesn't mean the mod did nothing.</td><td><span class="ve nada">Nothing</span></td></tr>
+<tr><td>The debug log (<code>--debug-file</code>)</td><td>Every mod call to connectors and every program, with the plugin name. Only if you turn it on, and any of your processes can edit it.</td><td><span class="ve si">Everything, if you turn it on</span></td></tr>
+<tr><td>OpenTelemetry</td><td>The mod's calls to connectors, without what it searched for. For programs, nothing.</td><td><span class="ve medio">Halfway</span></td></tr>
+<tr><td>Each service's own logs</td><td>Who read what in the connector and in the secrets manager. It's the only record the mod can't touch.</td><td><span class="ve si">Yes, but off your machine</span></td></tr>
+</table>
+
+<h2><span class="num">04</span>What I'd tell you before you try it</h2>
+<div class="tips reveal">
+  <div class="card"><strong>Use manual mode in sessions with third-party plugins</strong><span>It's the simplest option: every time the mod wants to read from a connector, Claude Code stops and tells you who's asking.</span><span class="contra">That said, it only watches the read; the programs the mod launches go through without asking. And with a run every two minutes you get thirty prompts an hour, so anyone ends up switching to auto mode.</span></div>
+  <div class="card"><strong>Review the whole plugin and keep the hash of every file</strong><span>Follow every <code>$.process.run</code> to the script it launches and whatever that script imports. With an <code>rg 'session\.start|clock\.every|process\.run|mcp\.call'</code> over the plugin folder you have the map in seconds.</span><span class="contra">And look at it yourself, because Claude Code won't tell you: when I installed it from a marketplace it showed no warning about hooks, programs or network, and <code>claude plugin details</code> showed “Hooks (0)” for a mod with a timer that launches programs. It takes time. And if the mod downloads code, what you reviewed can change tomorrow, so those hashes have to be watched while it runs. And start these sessions with <code>--debug-file</code>: it's the only local record where the mod's programs showed up.</span></div>
+  <div class="card"><strong>Give the bridge its own user and watch it from the outside</strong><span>A system user that can't read secret values and only has the connectors it needs. And as the source of truth, the logs of the secrets manager and of the services themselves.</span><span class="contra">It costs more to set up, and those logs tell you after the read has already happened.</span></div>
+</div>
+
+<h2><span class="num">05</span>What I'd ask Anthropic for</h2>
+<p>The documentation already warns that mods run without a sandbox, and that's fine. What I miss is being able to <b>see</b> it. And the good thing is that almost everything needed is already inside Claude Code: the validator already knows what each mod calls, telemetry already goes out and the <code>plugin.register</code> event already allows stopping one before it loads. They are three small requests, one for each moment in a mod's life, and each one comes from something I measured.</p>
+<div class="asks reveal">
+  <div class="card ask" style="--c:var(--agent);--i:0"><span class="ak">01 · at install</span><h3>Tell me what it does before it comes in</h3><ul>
+    <li><b>What the validator already knows, at install time</b><span>When I installed my mod from a marketplace there wasn't a single warning, and <code>claude plugin details</code> showed “Hooks (0)” for a mod with a timer that launches programs. The right list already exists: it's the one <code>plugin.register</code> receives.</span></li>
+    <li><b>In one line anyone can follow</b><span>“Starts with the session, uses a timer, reads Gmail and Calendar and launches programs”. With that you decide in two seconds.</span></li>
+  </ul></div>
+  <div class="card ask" style="--c:var(--stop);--i:1"><span class="ak">02 · while it runs</span><h3>Let me decide about what it launches</h3><ul>
+    <li><b>A permission rule for <code>$.process.run</code></b><span>Today permission rules cover Claude's tools and leave mods out: with <code>Read(.env)</code> denied, a mod can still read that file. It's the red row in the table, in all four modes.</span></li>
+    <li><b>An indicator in the status line</b><span>Something like <code>bridge-lab · 2 reads · 2 programs · 5 min ago</code>, so you can see somebody's working even when nobody's typing.</span></li>
+  </ul></div>
+  <div class="card ask" style="--c:var(--ok);--i:2"><span class="ak">03 · afterwards</span><h3>A trail the mod can't erase</h3><ul>
+    <li><b>The programs, in telemetry</b><span>Connector reads already go out through OpenTelemetry; the programs the mod launches don't. It's the same channel and the missing piece (Boris, this is the one I was telling you about).</span></li>
+    <li><b>What the mod does and what you approve, in the history</b><span>Approvals in manual mode left no line at all in the session history.</span></li>
+  </ul></div>
+</div>
+
+<div class="next reveal"><strong>In part two</strong>
+<p style="margin:0">We'll close our own bridge: a user just for it, access only to metadata and the same test with the same kind of secret, which this time has to fail. We'll tell it, however it turns out.</p></div>
+
+<p class="cierre reveal">A mod brings <span>code that uses your keys</span>. You decide which doors you open for it.</p>
+
+<details class="ev" id="ev">
+<summary>Evidence and sources</summary>
+<p>Every piece of data in this article has its proof here: what I measured, when and the fingerprint of each record.</p>
+<div class="tw"><table>
+<tr><th>ID</th><th>What it backs</th></tr>
+<tr><td>E-AUTO-01</td><td>Auto mode session, runs, 15-byte secret (SHA-256 prefix <code>ba3f3f4a3e2c</code>) and the live script change.</td></tr>
+<tr><td>E-PANE-01</td><td>Four text captures of the terminal before and after the reads, identical SHA-256 <code class="hash">2f68343ac2d337bd438c867eed7e84cbb6f0ceaae9aa8868208822b4eb9ea2ab</code></td></tr>
+<tr><td>E-JSONL-01</td><td>Session history (JSONL): five lines, the last one at 11:05:20 UTC. SHA-256 <code class="hash">6e37da6f25a2b8ac4f2f9c50b0c4f117c3e2f94e73d70db97fcab059ddc29f29</code></td></tr>
+<tr><td>E-PERM-01</td><td>Captures of the prompts in manual mode and times from the mod's log (12:32:28 and 12:32:38 UTC).</td></tr>
+<tr><td>E-MODES-01</td><td>Local process in manual, approval and JSONL, reversible write in auto. Terminal SHA-256 <code class="hash">21a1bfb83df0fd03c2be0fd6b733419dc04ec1259eca73a604ff74159184b559</code>; JSONL SHA-256 <code class="hash">e075974ead966493a7e79014eca879d6ae6021e16d51eff5761fd6bad6f35c91</code></td></tr>
+<tr><td>E-ECO-01</td><td>Community mod catalog, scan of 1 Nov 2026 with <code>claude plugin validate</code> 2.1.316 (it reads the code without running it). My own count over its data: 7,349 mods (no duplicates, tests or copies); of the 6,962 with a complete analysis, 2,795 launch processes, 2,299 read environment variables and 1,758 combine a timer and processes. Stars count the whole repository, with all its mods.</td></tr>
+<tr><td>E-V4</td><td>Round of checks on 2 Nov (Claude Code 2.1.316). Telemetry on in manual and auto: the mod's calls to Gmail and Calendar show up as tool_decision and tool_result, with only the server and the tool; <code>$.process.run</code> produces no event, only a trace in the local debug log. Accept edits, in a new session: the script ran with no prompt. Install from a local marketplace with no warning about hooks, processes or network; <code>claude plugin details</code> showed Hooks (0). A script launched by the mod made a POST of 52 dummy bytes to localhost (HTTP 204). Pending, for lack of admin access: the secrets manager audit and the Google Workspace one.</td></tr>
+<tr><td>E-DEBUG-01</td><td>Manual mode session with <code>--debug-file</code> and telemetry to console: six plugin lines in the debug log (two <code>mcp.call</code> with their response and one <code>process.run</code> with exit 0); 17 telemetry events, with two <code>tool_decision</code> and two <code>tool_result</code> for the connector calls and none for the process.</td></tr>
+<tr><td>E-BYPASS-01</td><td>Isolated test in bypass: five services (Drive, Slack, Gmail, Calendar, Atlassian) and the downloaded helper.</td></tr>
+</table></div>
+<p>About the OpenClaw stuff: <a href="https://tomshardware.com/tech-industry/cyber-security/malicious-moltbot-skill-targets-crypto-users-on-clawhub">Tom's Hardware, malicious skills on ClawHub</a> (late January 2026), <a href="https://techradar.com/pro/security/multiple-malicious-openclaw-skills-found-online-including-two-macos-infostealers">TechRadar, macOS infostealers in OpenClaw skills</a> (Unit 42 report) and the <a href="https://www.bitdoze.com/openclaw-security-guide/">Bitdoze OpenClaw security guide</a> (ClawHavoc campaign; the figures for infected skills vary depending on the source).</p>
+<p>Claude Code documentation: <a href="https://code.claude.com/docs/en/plugins/mods/overview">Mods overview</a>, <a href="https://code.claude.com/docs/en/plugins/mods/reference">Mods reference</a>, <a href="https://code.claude.com/docs/en/permission-modes">Permission modes</a> and <a href="https://code.claude.com/docs/en/monitoring-usage">Monitoring</a>.</p>
+</details>
+
+</div>
+<script>
+(function(){
+  document.documentElement.classList.add('js');
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var timers = {};
+  function later(id, fn, ms){ (timers[id] = timers[id] || []).push(setTimeout(fn, ms)); }
+  function stop(id){ (timers[id] || []).forEach(clearTimeout); timers[id] = []; }
+  if (reduce) document.querySelectorAll('.sb svg').forEach(function(s){ s.pauseAnimations && s.pauseAnimations(); });
+
+  function countUp(root){
+    root.querySelectorAll('.n[data-to]').forEach(function(n){
+      var to = +n.dataset.to, sm = n.querySelector('small'), suffix = sm ? sm.outerHTML : '';
+      if (reduce) return;
+      var t0 = performance.now(), d = 1100;
+      (function step(t){ var p = Math.min(1, (t - t0) / d), e = 1 - Math.pow(1 - p, 3);
+        n.innerHTML = Math.round(to * e) + suffix; if (p < 1) requestAnimationFrame(step); })(t0);
+    });
+  }
+
+  var audit = document.getElementById('audit'), tickline = document.getElementById('tickline');
+  var steps = [].slice.call(document.querySelectorAll('#tick .step'));
+  var tickN = 0, lines = [];
+  var L = {g:'gmail · 5 results', c:'calendar · 10 results', t:function(n){return 'run ' + n + ' · <b>0 model calls</b> · terminal unchanged · history unchanged';}};
+  function add(s){ lines.push(s); if (lines.length > 5) lines = lines.slice(-5);
+    audit.innerHTML = lines.map(function(l){ return '<div class="line">' + l + '</div>'; }).join(''); }
+  function runTick(){
+    tickN++;
+    steps.forEach(function(s, i){ later('tick', function(){
+      steps.forEach(function(x){ x.classList.remove('on'); }); s.classList.add('on');
+      if (i === 1) add(L.g); if (i === 2) add(L.c);
+    }, i * 700); });
+    later('tick', function(){ steps.forEach(function(x){ x.classList.remove('on'); }); tickline.innerHTML = L.t(tickN); }, steps.length * 700);
+  }
+  function startTick(){
+    stop('tick'); tickN = 0; lines = []; audit.innerHTML = '';
+    if (reduce) { add(L.g); add(L.c); tickline.innerHTML = L.t(1); return; }
+    runTick(); (function loop(){ later('tick', function(){ runTick(); loop(); }, 5200); })();
+  }
+  var seqSteps = [].slice.call(document.querySelectorAll('#seq .step'));
+  function startSeq(){
+    stop('seq'); if (reduce) return;
+    var run = function(){ seqSteps.forEach(function(s, i){ later('seq', function(){ seqSteps.forEach(function(x){ x.classList.remove('on'); }); s.classList.add('on'); }, i * 900); }); };
+    run(); (function loop(){ later('seq', function(){ run(); loop(); }, seqSteps.length * 900 + 1200); })();
+  }
+  var onEnter = { stats: countUp, tick: startTick, seq: startSeq };
+  var els = document.querySelectorAll('.sb .reveal');
+  if (!('IntersectionObserver' in window) || navigator.webdriver) {
+    els.forEach(function(e){ e.classList.add('in'); onEnter[e.id] && onEnter[e.id](e); });
+  } else {
+    var io = new IntersectionObserver(function(entries){ entries.forEach(function(en){
+      if (!en.isIntersecting) return; en.target.classList.add('in'); io.unobserve(en.target);
+      onEnter[en.target.id] && onEnter[en.target.id](en.target); }); }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(e){ io.observe(e); });
+  }
+  document.querySelectorAll('.sb a.src').forEach(function(a){ a.addEventListener('click', function(){ var e = document.getElementById('ev'); if (e) e.open = true; }); });
+  document.querySelectorAll('.sb [data-replay]').forEach(function(b){ b.addEventListener('click', function(){
+    var id = b.dataset.replay, el = document.getElementById(id);
+    if (id === 'tick') return startTick(); if (id === 'seq') return startSeq();
+    el.classList.remove('in'); void el.offsetWidth;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.classList.add('in'); }); });
+  }); });
+})();
+</script>
+
+</main>
+<footer class="pie">
+  <span>Jose López · Disrupted AI</span>
+  <nav><a href="/en/feed.xml">RSS</a><a href="https://disruptedai.substack.com/">Substack</a><a href="https://github.com/josemlopez">GitHub</a><a href="https://www.linkedin.com/in/jmlop/">LinkedIn</a></nav>
+</footer>
+<script>
+/* Tema claro u oscuro: por defecto el del sistema; el botón lo fija y lo recuerda. Los <style data-tema="oscuro"> de cada artículo siguen la misma elección. */
+(function(){
+  var r=document.documentElement,b=document.getElementById('tema');
+  function aplica(t){
+    if(t){r.setAttribute('data-theme',t);}else{r.removeAttribute('data-theme');}
+    document.querySelectorAll('style[data-tema="oscuro"]').forEach(function(st){
+      st.media=t==='dark'?'all':(t==='light'?'not all':'(prefers-color-scheme: dark)');});
+  }
+
+/* Guardián de contraste (1 nov, Jose: "los colores de las letras a veces hacen que se pierdan"): tras pintar, cualquier
+   texto por debajo de WCAG AA (4,5:1; 3:1 si es grande) pasa a la tinta de marca que más contraste tenga con su fondo. */
+function guardian(){
+  var lum=function(c){var m=c.match(/[\d.]+/g);if(!m)return null;var f=function(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};
+    return {L:.2126*f(+m[0])+.7152*f(+m[1])+.0722*f(+m[2]),a:m[3]===undefined?1:+m[3]}};
+  var fondo=function(el){for(var e=el;e;e=e.parentElement){var l=lum(getComputedStyle(e).backgroundColor);if(l&&l.a>.5)return l.L;}return lum(getComputedStyle(document.body).backgroundColor).L};
+  var cr=function(a,b){return (Math.max(a,b)+.05)/(Math.min(a,b)+.05)};
+  var OSC=lum('rgb(46,40,41)').L,CLA=lum('rgb(237,227,223)').L;
+  document.querySelectorAll('[data-guardian]').forEach(function(e){e.style.removeProperty('color');e.removeAttribute('data-guardian')});
+  var w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT),n,vistos=new Set();
+  while(n=w.nextNode()){var el=n.parentElement;if(!el||vistos.has(el)||n.textContent.trim().length<2||el.closest('svg'))continue;vistos.add(el);
+    var cs=getComputedStyle(el),c=lum(cs.color);if(!c)continue;var f=fondo(el),g=parseFloat(cs.fontSize)>=24;
+    if(cr(c.L,f)<(g?3:4.5)){el.style.setProperty('color',cr(OSC,f)>cr(CLA,f)?'#2E2829':'#EDE3DF','important');el.setAttribute('data-guardian','');}}
+}
+  var g=null;try{g=localStorage.getItem('tema');}catch(e){}
+  aplica(g);
+  window.addEventListener('load',function(){setTimeout(guardian,50)});
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){setTimeout(guardian,50)});
+  b&&b.addEventListener('click',function(){
+    var oscuro=r.getAttribute('data-theme')?r.getAttribute('data-theme')==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    var t=oscuro?'light':'dark';aplica(t);try{localStorage.setItem('tema',t);}catch(e){}setTimeout(guardian,50);
+  });
+})();
+</script>
+</body>
+</html>
