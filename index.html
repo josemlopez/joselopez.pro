@@ -446,6 +446,10 @@
     @media (prefers-reduced-motion: reduce) {
       .media-card { transition: none; }
     }
+    .coast{margin:18px 0 22px}
+    .coast img{display:block;width:100%;height:auto;max-height:420px;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+    .coast figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+    @media (max-width:560px){.coast img{max-height:520px}}
   </style>
 </head>
 <body>
@@ -471,6 +475,14 @@
     <section class="about">
       <h2>About</h2>
       <p>I live on the Spanish coast and work from there. The commute is excellent.</p>
+      <figure class="coast">
+        <picture>
+          <source media="(max-width: 560px)" srcset="/img/coast-morning-tall.webp" width="900" height="1600">
+          <img src="/img/coast-morning.webp" width="1600" height="1200" loading="lazy" decoding="async"
+               alt="Sunrise over a quiet beach on the Atlantic coast of southern Spain, the tide out and the sky orange and violet.">
+        </picture>
+        <figcaption>Most mornings start here.</figcaption>
+      </figure>
       <p>I have been building software for more than 25 years. Over that time, I have worked on many different kinds of systems, including combat systems for one of the Spanish Navy’s most advanced frigates, distributed graph engines, production ML systems, and AI agents. I now lead AI at bunny.net.</p>
       <p>I would rather ship a boring system that stays up than a clever one that needs me awake.</p>
       <p>I like writing about what I build and what breaks along the way. I do it on <a href="/en/blog/">my blog</a>, on <a href="https://disruptedai.substack.com/">Substack</a>, on <a href="https://www.linkedin.com/in/jmlop/">LinkedIn</a> and on <a href="https://x.com/dl_insider">X</a>.</p>
